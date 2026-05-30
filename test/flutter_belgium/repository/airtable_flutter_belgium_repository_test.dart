@@ -1,5 +1,6 @@
 // test/flutter_belgium/repository/airtable_flutter_belgium_repository_test.dart
 import 'package:flutter_belgium_data/src/flutter_belgium/config/airtable_config.dart';
+import 'package:flutter_belgium_data/src/flutter_belgium/config/flutter_belgium_logger.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/repository/airtable_flutter_belgium_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -593,23 +594,21 @@ void main() {
     });
   });
 
-  group('AirtableFlutterBelgiumRepository - logMissingData', () {
-    test(
-      'logMissingData false suppresses skip logging and returns valid data',
-      () async {
-        final repo = AirtableFlutterBelgiumRepository(
-          config: _config,
-          logMissingData: false,
-          client: _mockClient(),
-        );
-        // Should not throw and should return valid results (only 1 valid company)
-        final companies = await repo.getHostingCompanies();
-        expect(companies.length, 1);
-        expect(companies.first.name, 'ACA Group');
-      },
-    );
+  group('AirtableFlutterBelgiumRepository - skip logging', () {
+    tearDown(() => FlutterBelgiumLogger.configure());
 
-    test('logMissingData true is the default', () async {
+    test('returns valid data regardless of logger configuration', () async {
+      FlutterBelgiumLogger.configure(logMissingData: false);
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
+      final companies = await repo.getHostingCompanies();
+      expect(companies.length, 1);
+      expect(companies.first.name, 'ACA Group');
+    });
+
+    test('returns valid data with default logger configuration', () async {
       final repo = AirtableFlutterBelgiumRepository(
         config: _config,
         client: _mockClient(),

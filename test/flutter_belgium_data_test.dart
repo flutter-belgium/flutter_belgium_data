@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter_belgium_data/src/flutter_belgium/config/airtable_config.dart';
+import 'package:flutter_belgium_data/src/flutter_belgium/config/flutter_belgium_logger.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/community_links.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/company.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/meetup.dart';
@@ -68,22 +71,39 @@ class _FakeFlutterBelgiumRepo implements FlutterBelgiumRepository {
 
 void main() {
   group('FlutterBelgiumData', () {
+    tearDown(() => FlutterBelgiumLogger.configure());
+
     test('can be constructed with required airTableConfig', () {
       final data = FlutterBelgiumData(airTableConfig: _config);
       expect(data, isNotNull);
     });
 
-    test('logMissingData defaults to true', () {
-      final data = FlutterBelgiumData(airTableConfig: _config);
-      expect(data.tools.logMissingData, isTrue);
+    test('logMissingData defaults to true and configures logger', () {
+      List<String> captured = [];
+      runZoned(
+        () {
+          FlutterBelgiumData(airTableConfig: _config);
+          FlutterBelgiumLogger.skippedRecord('test');
+        },
+        zoneSpecification: ZoneSpecification(
+          print: (self, parent, zone, line) => captured.add(line),
+        ),
+      );
+      expect(captured, ['[AirTable] test']);
     });
 
-    test('logMissingData false is propagated to tools', () {
-      final data = FlutterBelgiumData(
-        airTableConfig: _config,
-        logMissingData: false,
+    test('logMissingData false configures logger to suppress output', () {
+      List<String> captured = [];
+      runZoned(
+        () {
+          FlutterBelgiumData(airTableConfig: _config, logMissingData: false);
+          FlutterBelgiumLogger.skippedRecord('test');
+        },
+        zoneSpecification: ZoneSpecification(
+          print: (self, parent, zone, line) => captured.add(line),
+        ),
       );
-      expect(data.tools.logMissingData, isFalse);
+      expect(captured, isEmpty);
     });
 
     test('getMadeInApps delegates to injected repository', () async {

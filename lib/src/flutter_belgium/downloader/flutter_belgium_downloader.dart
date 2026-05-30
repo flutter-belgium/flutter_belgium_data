@@ -14,14 +14,12 @@ class FlutterBelgiumDownloader {
     AirTableConfig config,
     String outputDir, {
     http.Client? client,
-    bool logMissingData = true,
   }) async {
     final httpClient = client ?? http.Client();
     final shouldClose = client == null;
-    final logger = FlutterBelgiumLogger(logMissingData: logMissingData);
     try {
-      await _downloadCompanyLogos(config, outputDir, httpClient, logger);
-      await _downloadPersonAvatars(config, outputDir, httpClient, logger);
+      await _downloadCompanyLogos(config, outputDir, httpClient);
+      await _downloadPersonAvatars(config, outputDir, httpClient);
       await _downloadMeetupPosters(config, outputDir, httpClient);
     } finally {
       if (shouldClose) httpClient.close();
@@ -51,7 +49,6 @@ class FlutterBelgiumDownloader {
     AirTableConfig config,
     String outputDir,
     http.Client httpClient,
-    FlutterBelgiumLogger logger,
   ) async {
     print('Downloading company logos...');
     final records = await fetchAllAirtableRecords(
@@ -62,7 +59,7 @@ class FlutterBelgiumDownloader {
     for (final record in records) {
       final fields = AirtableLocationFields.fromJson(record.fields);
       if (fields.logo.isEmpty) {
-        logger.skippedRecord(
+        FlutterBelgiumLogger.skippedRecord(
           'Skipping logo download for company "${fields.name ?? record.id}": missing "Logo" attachment',
         );
         continue;
@@ -79,7 +76,6 @@ class FlutterBelgiumDownloader {
     AirTableConfig config,
     String outputDir,
     http.Client httpClient,
-    FlutterBelgiumLogger logger,
   ) async {
     print('Downloading person avatars...');
     final records = await fetchAllAirtableRecords(
@@ -90,7 +86,7 @@ class FlutterBelgiumDownloader {
     for (final record in records) {
       final fields = AirtablePersonFields.fromJson(record.fields);
       if (fields.photo.isEmpty) {
-        logger.skippedRecord(
+        FlutterBelgiumLogger.skippedRecord(
           'Skipping avatar download for person "${fields.name ?? record.id}": missing "Photo" attachment',
         );
         continue;

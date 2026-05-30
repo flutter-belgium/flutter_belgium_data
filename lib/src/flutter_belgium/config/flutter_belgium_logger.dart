@@ -1,9 +1,13 @@
 class FlutterBelgiumLogger {
-  const FlutterBelgiumLogger({required this.logMissingData});
+  FlutterBelgiumLogger._();
 
-  final bool logMissingData;
+  static bool _logMissingData = true;
 
-  void skippedRecord(String message) {
-    if (logMissingData) print('[AirTable] $message');
+  static void configure({bool logMissingData = true}) {
+    _logMissingData = logMissingData;
+  }
+
+  static void skippedRecord(String message) {
+    if (_logMissingData) print('[AirTable] $message');
   }
 }

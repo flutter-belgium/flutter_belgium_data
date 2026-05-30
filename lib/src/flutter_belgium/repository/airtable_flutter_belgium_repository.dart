@@ -24,15 +24,12 @@ import 'package:http/http.dart' as http;
 class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
   AirtableFlutterBelgiumRepository({
     required AirTableConfig config,
-    bool logMissingData = true,
     http.Client? client,
   }) : _config = config,
-       _client = client ?? http.Client(),
-       _logger = FlutterBelgiumLogger(logMissingData: logMissingData);
+       _client = client ?? http.Client();
 
   final AirTableConfig _config;
   final http.Client _client;
-  final FlutterBelgiumLogger _logger;
 
   List<Meetup>? _meetups;
   List<Talk>? _talks;
@@ -49,19 +46,19 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     for (final record in records) {
       final locationFields = AirtableLocationFields.fromJson(record.fields);
       if (locationFields.name == null) {
-        _logger.skippedRecord(
+        FlutterBelgiumLogger.skippedRecord(
           'Skipping company ${record.id}: missing "Name" field',
         );
         continue;
       }
       if (locationFields.logo.isEmpty) {
-        _logger.skippedRecord(
+        FlutterBelgiumLogger.skippedRecord(
           'Skipping company "${locationFields.name}" (${record.id}): missing "Logo" attachment',
         );
         continue;
       }
       if (locationFields.websiteUrl == null) {
-        _logger.skippedRecord(
+        FlutterBelgiumLogger.skippedRecord(
           'Skipping company "${locationFields.name}" (${record.id}): missing "Website URL" field',
         );
         continue;
@@ -89,13 +86,13 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     for (final record in records) {
       final personFields = AirtablePersonFields.fromJson(record.fields);
       if (personFields.name == null) {
-        _logger.skippedRecord(
+        FlutterBelgiumLogger.skippedRecord(
           'Skipping person ${record.id}: missing "Name" field',
         );
         continue;
       }
       if (personFields.photo.isEmpty) {
-        _logger.skippedRecord(
+        FlutterBelgiumLogger.skippedRecord(
           'Skipping person "${personFields.name}" (${record.id}): missing "Photo" attachment',
         );
         continue;
@@ -146,33 +143,33 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     for (final record in meetupRecords) {
       final meetupFields = AirtableMeetupFields.fromJson(record.fields);
       if (meetupFields.name == null) {
-        _logger.skippedRecord(
+        FlutterBelgiumLogger.skippedRecord(
           'Skipping meetup ${record.id}: missing "Name" field',
         );
         continue;
       }
       if (meetupFields.date == null) {
-        _logger.skippedRecord(
+        FlutterBelgiumLogger.skippedRecord(
           'Skipping meetup "${meetupFields.name}" (${record.id}): missing "Date" field',
         );
         continue;
       }
       if (meetupFields.locationIds.isEmpty) {
-        _logger.skippedRecord(
+        FlutterBelgiumLogger.skippedRecord(
           'Skipping meetup "${meetupFields.name}" (${record.id}): missing "Location" field',
         );
         continue;
       }
       final location = locationMap[meetupFields.locationIds.first];
       if (location == null) {
-        _logger.skippedRecord(
+        FlutterBelgiumLogger.skippedRecord(
           'Skipping meetup "${meetupFields.name}" (${record.id}): location ${meetupFields.locationIds.first} was itself skipped (check its fields)',
         );
         continue;
       }
       final date = DateTime.tryParse(meetupFields.date!);
       if (date == null) {
-        _logger.skippedRecord(
+        FlutterBelgiumLogger.skippedRecord(
           'Skipping meetup "${meetupFields.name}" (${record.id}): invalid "Date" value "${meetupFields.date}"',
         );
         continue;
@@ -183,19 +180,19 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
         if (seenTalkIds.contains(talkId)) continue;
         final talkFields = rawTalks[talkId];
         if (talkFields == null) {
-          _logger.skippedRecord(
+          FlutterBelgiumLogger.skippedRecord(
             'Skipping talk $talkId in meetup "${meetupFields.name}": record not found in Talks table',
           );
           continue;
         }
         if (talkFields.name == null) {
-          _logger.skippedRecord(
+          FlutterBelgiumLogger.skippedRecord(
             'Skipping talk $talkId in meetup "${meetupFields.name}": missing "Name" field',
           );
           continue;
         }
         if (talkFields.speakerIds.isEmpty) {
-          _logger.skippedRecord(
+          FlutterBelgiumLogger.skippedRecord(
             'Skipping talk "${talkFields.name}" ($talkId) in meetup "${meetupFields.name}": missing "Speaker(s)" field',
           );
           continue;
@@ -205,7 +202,7 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
             .whereType<Person>()
             .toList();
         if (speakers.isEmpty) {
-          _logger.skippedRecord(
+          FlutterBelgiumLogger.skippedRecord(
             'Skipping talk "${talkFields.name}" ($talkId) in meetup "${meetupFields.name}": none of the linked speakers could be resolved (check their Photo and Name fields)',
           );
           continue;

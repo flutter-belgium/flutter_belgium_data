@@ -6,9 +6,7 @@ import 'package:flutter_belgium_data/src/made_in_flutter_belgium/downloader/made
 import 'package:http/http.dart' as http;
 
 class FlutterBelgiumTools {
-  const FlutterBelgiumTools({this.logMissingData = true});
-
-  final bool logMissingData;
+  const FlutterBelgiumTools();
 
   Future<void> downloadMadeInAssets({
     String outputPath = 'web/assets/made_in',
@@ -23,6 +21,5 @@ class FlutterBelgiumTools {
     config,
     outputPath,
     client: client,
-    logMissingData: logMissingData,
   );
 }

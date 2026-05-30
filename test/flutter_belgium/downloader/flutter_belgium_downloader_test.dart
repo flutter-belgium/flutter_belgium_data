@@ -200,29 +200,5 @@ void main() {
         completes,
       );
     });
-
-    test('logMissingData false does not throw', () async {
-      await expectLater(
-        FlutterBelgiumDownloader.downloadFlutterBelgiumAssets(
-          _config,
-          tempDir.path,
-          client: _mockClient(),
-          logMissingData: false,
-        ),
-        completes,
-      );
-    });
-
-    test('logMissingData true (default) does not throw', () async {
-      await expectLater(
-        FlutterBelgiumDownloader.downloadFlutterBelgiumAssets(
-          _config,
-          tempDir.path,
-          client: _mockClient(),
-          logMissingData: true,
-        ),
-        completes,
-      );
-    });
   });
 }

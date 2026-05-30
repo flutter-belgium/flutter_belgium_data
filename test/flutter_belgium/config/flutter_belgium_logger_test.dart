@@ -16,20 +16,20 @@ List<String> _capture(void Function() body) {
 
 void main() {
   group('FlutterBelgiumLogger', () {
+    tearDown(() => FlutterBelgiumLogger.configure());
+
     test('logs message with [AirTable] prefix when logMissingData is true', () {
+      FlutterBelgiumLogger.configure(logMissingData: true);
       final logs = _capture(
-        () => const FlutterBelgiumLogger(
-          logMissingData: true,
-        ).skippedRecord('missing Name'),
+        () => FlutterBelgiumLogger.skippedRecord('missing Name'),
       );
       expect(logs, ['[AirTable] missing Name']);
     });
 
     test('does not log when logMissingData is false', () {
+      FlutterBelgiumLogger.configure(logMissingData: false);
       final logs = _capture(
-        () => const FlutterBelgiumLogger(
-          logMissingData: false,
-        ).skippedRecord('missing Name'),
+        () => FlutterBelgiumLogger.skippedRecord('missing Name'),
       );
       expect(logs, isEmpty);
     });
