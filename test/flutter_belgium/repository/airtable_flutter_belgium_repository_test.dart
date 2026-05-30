@@ -118,6 +118,17 @@ const _meetupRecords = '''
         "Status": "Confirmed",
         "Date": "2026-06-01T17:00:00.000Z"
       }
+    },
+    {
+      "id": "recMEETUP_FUTURE",
+      "createdTime": "2025-01-01T00:00:00.000Z",
+      "fields": {
+        "Name": "Flutter Belgium #99",
+        "Status": "Confirmed",
+        "Date": "2099-01-01T17:00:00.000Z",
+        "Location": ["recCOMPANY1"],
+        "Meetup URL": "https://www.meetup.com/flutter-belgium/events/999"
+      }
     }
   ]
 }
@@ -233,6 +244,28 @@ void main() {
       final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
       final meetup = await repo.getMeetupBySlug('meetup-no-location');
       expect(meetup, isNull);
+    });
+
+    test('getPastMeetups returns past meetups sorted newest first', () async {
+      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final past = await repo.getPastMeetups();
+      // recMEETUP1 (2026-02-03) is in the past; future meetup (2099) is not
+      expect(past.any((m) => m.title == 'Flutter Belgium #26'), isTrue);
+      expect(past.any((m) => m.title == 'Flutter Belgium #99'), isFalse);
+    });
+
+    test('getUpcomingMeetups returns future meetups sorted soonest first', () async {
+      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final upcoming = await repo.getUpcomingMeetups();
+      expect(upcoming.any((m) => m.title == 'Flutter Belgium #99'), isTrue);
+      expect(upcoming.any((m) => m.title == 'Flutter Belgium #26'), isFalse);
+    });
+
+    test('getNextMeetup returns the soonest upcoming meetup', () async {
+      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final next = await repo.getNextMeetup();
+      expect(next, isNotNull);
+      expect(next!.title, 'Flutter Belgium #99');
     });
   });
 

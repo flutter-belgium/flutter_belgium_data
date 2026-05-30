@@ -33,6 +33,7 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
   List<Talk>? _talks;
   List<Person>? _persons;
   List<Company>? _companies;
+  Future<void>? _loadFuture;
 
   Future<List<Map<String, dynamic>>> _fetchAll(String tableId) async {
     final records = <Map<String, dynamic>>[];
@@ -120,9 +121,9 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     return map;
   }
 
-  Future<void> _loadData() async {
-    if (_meetups != null) return;
+  Future<void> _loadData() => _loadFuture ??= _doLoad();
 
+  Future<void> _doLoad() async {
     final talkRecords = await _fetchAll(_config.tableTalks);
     final rawTalks = <String, Map<String, dynamic>>{};
     for (final r in talkRecords) {
@@ -149,7 +150,8 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
       final location = locationMap[locationIds.first];
       if (location == null) continue;
 
-      final date = DateTime.parse(dateStr);
+      final date = DateTime.tryParse(dateStr);
+      if (date == null) continue;
 
       final talkIds =
           (fields['Talks'] as List?)?.cast<String>() ?? <String>[];
@@ -231,11 +233,7 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
   @override
   Future<Meetup?> getMeetupBySlug(String slug) async {
     await _loadData();
-    try {
-      return _meetups!.firstWhere((m) => m.slug == slug);
-    } catch (_) {
-      return null;
-    }
+    return _meetups!.where((m) => m.slug == slug).firstOrNull;
   }
 
   @override
