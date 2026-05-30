@@ -57,7 +57,12 @@ class FlutterBelgiumDownloader {
     );
     for (final record in records) {
       final fields = AirtableLocationFields.fromJson(record.fields);
-      if (fields.logo.isEmpty) continue;
+      if (fields.logo.isEmpty) {
+        print(
+          '[AirTable] Skipping logo download for company "${fields.name ?? record.id}": missing "Logo" attachment',
+        );
+        continue;
+      }
       await _downloadFile(
         httpClient,
         fields.logo.first.url,
@@ -79,7 +84,12 @@ class FlutterBelgiumDownloader {
     );
     for (final record in records) {
       final fields = AirtablePersonFields.fromJson(record.fields);
-      if (fields.photo.isEmpty) continue;
+      if (fields.photo.isEmpty) {
+        print(
+          '[AirTable] Skipping avatar download for person "${fields.name ?? record.id}": missing "Photo" attachment',
+        );
+        continue;
+      }
       await _downloadFile(
         httpClient,
         fields.photo.first.url,

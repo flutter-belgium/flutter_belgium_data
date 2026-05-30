@@ -44,9 +44,20 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     final map = <String, _Location>{};
     for (final record in records) {
       final locationFields = AirtableLocationFields.fromJson(record.fields);
-      if (locationFields.name == null ||
-          locationFields.logo.isEmpty ||
-          locationFields.websiteUrl == null) {
+      if (locationFields.name == null) {
+        print('[AirTable] Skipping company ${record.id}: missing "Name" field');
+        continue;
+      }
+      if (locationFields.logo.isEmpty) {
+        print(
+          '[AirTable] Skipping company "${locationFields.name}" (${record.id}): missing "Logo" attachment',
+        );
+        continue;
+      }
+      if (locationFields.websiteUrl == null) {
+        print(
+          '[AirTable] Skipping company "${locationFields.name}" (${record.id}): missing "Website URL" field',
+        );
         continue;
       }
       map[record.id] = _Location(
@@ -71,7 +82,16 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     final map = <String, Person>{};
     for (final record in records) {
       final personFields = AirtablePersonFields.fromJson(record.fields);
-      if (personFields.name == null || personFields.photo.isEmpty) continue;
+      if (personFields.name == null) {
+        print('[AirTable] Skipping person ${record.id}: missing "Name" field');
+        continue;
+      }
+      if (personFields.photo.isEmpty) {
+        print(
+          '[AirTable] Skipping person "${personFields.name}" (${record.id}): missing "Photo" attachment',
+        );
+        continue;
+      }
       final personCompanies = personFields.companyIds
           .map((cid) {
             final loc = locations[cid];
@@ -117,30 +137,69 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
 
     for (final record in meetupRecords) {
       final meetupFields = AirtableMeetupFields.fromJson(record.fields);
-      if (meetupFields.name == null ||
-          meetupFields.date == null ||
-          meetupFields.locationIds.isEmpty) {
+      if (meetupFields.name == null) {
+        print('[AirTable] Skipping meetup ${record.id}: missing "Name" field');
+        continue;
+      }
+      if (meetupFields.date == null) {
+        print(
+          '[AirTable] Skipping meetup "${meetupFields.name}" (${record.id}): missing "Date" field',
+        );
+        continue;
+      }
+      if (meetupFields.locationIds.isEmpty) {
+        print(
+          '[AirTable] Skipping meetup "${meetupFields.name}" (${record.id}): missing "Location" field',
+        );
         continue;
       }
       final location = locationMap[meetupFields.locationIds.first];
-      if (location == null) continue;
+      if (location == null) {
+        print(
+          '[AirTable] Skipping meetup "${meetupFields.name}" (${record.id}): location ${meetupFields.locationIds.first} was itself skipped (check its fields)',
+        );
+        continue;
+      }
       final date = DateTime.tryParse(meetupFields.date!);
-      if (date == null) continue;
+      if (date == null) {
+        print(
+          '[AirTable] Skipping meetup "${meetupFields.name}" (${record.id}): invalid "Date" value "${meetupFields.date}"',
+        );
+        continue;
+      }
 
       final meetupTalks = <Talk>[];
       for (final talkId in meetupFields.talkIds) {
         if (seenTalkIds.contains(talkId)) continue;
         final talkFields = rawTalks[talkId];
-        if (talkFields == null ||
-            talkFields.name == null ||
-            talkFields.speakerIds.isEmpty) {
+        if (talkFields == null) {
+          print(
+            '[AirTable] Skipping talk $talkId in meetup "${meetupFields.name}": record not found in Talks table',
+          );
+          continue;
+        }
+        if (talkFields.name == null) {
+          print(
+            '[AirTable] Skipping talk $talkId in meetup "${meetupFields.name}": missing "Name" field',
+          );
+          continue;
+        }
+        if (talkFields.speakerIds.isEmpty) {
+          print(
+            '[AirTable] Skipping talk "${talkFields.name}" ($talkId) in meetup "${meetupFields.name}": missing "Speaker(s)" field',
+          );
           continue;
         }
         final speakers = talkFields.speakerIds
             .map((pid) => personMap[pid])
             .whereType<Person>()
             .toList();
-        if (speakers.isEmpty) continue;
+        if (speakers.isEmpty) {
+          print(
+            '[AirTable] Skipping talk "${talkFields.name}" ($talkId) in meetup "${meetupFields.name}": none of the linked speakers could be resolved (check their Photo and Name fields)',
+          );
+          continue;
+        }
         final talk = Talk(
           id: talkId,
           title: talkFields.name!,
