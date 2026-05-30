@@ -2,7 +2,6 @@ import 'package:flutter_belgium_data/src/flutter_belgium/models/community_links.
 import 'package:flutter_belgium_data/src/flutter_belgium/models/company.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/meetup.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/person.dart';
-import 'package:flutter_belgium_data/src/flutter_belgium/models/person_social_links.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/sponsor.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/talk.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/team_member.dart';
