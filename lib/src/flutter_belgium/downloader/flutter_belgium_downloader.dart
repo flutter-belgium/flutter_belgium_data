@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter_belgium_data/src/flutter_belgium/config/airtable_config.dart';
+import 'package:flutter_belgium_data/src/flutter_belgium/models/airtable/airtable_location_fields.dart';
+import 'package:flutter_belgium_data/src/flutter_belgium/models/airtable/airtable_meetup_fields.dart';
+import 'package:flutter_belgium_data/src/flutter_belgium/models/airtable/airtable_person_fields.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/util/airtable_http.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/util/flutter_belgium_utils.dart';
 import 'package:http/http.dart' as http;
@@ -41,54 +44,48 @@ class FlutterBelgiumDownloader {
   static Future<void> _downloadCompanyLogos(
       AirTableConfig config, String outputDir, http.Client client) async {
     print('Downloading company logos...');
-    final records = await fetchAllAirtableRecords(config, config.tableLocations, client);
+    final records =
+        await fetchAllAirtableRecords(config, config.tableLocations, client);
     for (final record in records) {
-      final fields = record['fields'] as Map<String, dynamic>;
-      final id = record['id'] as String;
-      final logoAttachments =
-          (fields['Logo'] as List?)?.cast<Map<String, dynamic>>();
-      final attachment = logoAttachments?.firstOrNull;
-      if (attachment == null) continue;
-      final filename = attachment['filename'] as String;
-      final url = attachment['url'] as String;
-      final localPath = '$outputDir/${toLocalCompanyLogoPath(id, filename)}';
-      await _downloadFile(client, url, localPath);
+      final f = AirtableLocationFields.fromJson(record.fields);
+      if (f.logo.isEmpty) continue;
+      await _downloadFile(
+        client,
+        f.logo.first.url,
+        '$outputDir/${toLocalCompanyLogoPath(record.id, f.logo.first.filename)}',
+      );
     }
   }
 
   static Future<void> _downloadPersonAvatars(
       AirTableConfig config, String outputDir, http.Client client) async {
     print('Downloading person avatars...');
-    final records = await fetchAllAirtableRecords(config, config.tablePeople, client);
+    final records =
+        await fetchAllAirtableRecords(config, config.tablePeople, client);
     for (final record in records) {
-      final fields = record['fields'] as Map<String, dynamic>;
-      final id = record['id'] as String;
-      final photoAttachments =
-          (fields['Photo'] as List?)?.cast<Map<String, dynamic>>();
-      final attachment = photoAttachments?.firstOrNull;
-      if (attachment == null) continue;
-      final filename = attachment['filename'] as String;
-      final url = attachment['url'] as String;
-      final localPath = '$outputDir/${toLocalPersonAvatarPath(id, filename)}';
-      await _downloadFile(client, url, localPath);
+      final f = AirtablePersonFields.fromJson(record.fields);
+      if (f.photo.isEmpty) continue;
+      await _downloadFile(
+        client,
+        f.photo.first.url,
+        '$outputDir/${toLocalPersonAvatarPath(record.id, f.photo.first.filename)}',
+      );
     }
   }
 
   static Future<void> _downloadMeetupPosters(
       AirTableConfig config, String outputDir, http.Client client) async {
     print('Downloading meetup posters...');
-    final records = await fetchAllAirtableRecords(config, config.tableMeetups, client);
+    final records =
+        await fetchAllAirtableRecords(config, config.tableMeetups, client);
     for (final record in records) {
-      final fields = record['fields'] as Map<String, dynamic>;
-      final id = record['id'] as String;
-      final posterAttachments =
-          (fields['Poster'] as List?)?.cast<Map<String, dynamic>>();
-      final attachment = posterAttachments?.firstOrNull;
-      if (attachment == null) continue;
-      final filename = attachment['filename'] as String;
-      final url = attachment['url'] as String;
-      final localPath = '$outputDir/${toLocalMeetupPosterPath(id, filename)}';
-      await _downloadFile(client, url, localPath);
+      final f = AirtableMeetupFields.fromJson(record.fields);
+      if (f.poster.isEmpty) continue;
+      await _downloadFile(
+        client,
+        f.poster.first.url,
+        '$outputDir/${toLocalMeetupPosterPath(record.id, f.poster.first.filename)}',
+      );
     }
   }
 }

@@ -2,16 +2,17 @@ import 'dart:convert';
 import 'dart:io' show HttpException;
 
 import 'package:flutter_belgium_data/src/flutter_belgium/config/airtable_config.dart';
+import 'package:flutter_belgium_data/src/flutter_belgium/models/airtable/airtable_record.dart';
 import 'package:http/http.dart' as http;
 
 const _baseUrl = 'https://api.airtable.com';
 
-Future<List<Map<String, dynamic>>> fetchAllAirtableRecords(
+Future<List<AirtableRecord>> fetchAllAirtableRecords(
   AirTableConfig config,
   String tableId,
   http.Client client,
 ) async {
-  final records = <Map<String, dynamic>>[];
+  final records = <AirtableRecord>[];
   String? offset;
   do {
     final params = <String, String>{};
@@ -28,7 +29,10 @@ Future<List<Map<String, dynamic>>> fetchAllAirtableRecords(
       );
     }
     final data = json.decode(response.body) as Map<String, dynamic>;
-    final batch = (data['records'] as List).cast<Map<String, dynamic>>();
+    final batch = (data['records'] as List)
+        .cast<Map<String, dynamic>>()
+        .map(AirtableRecord.fromJson)
+        .toList();
     records.addAll(batch);
     offset = data['offset'] as String?;
   } while (offset != null);
