@@ -27,11 +27,30 @@ dependencies:
 
 ### Configuration
 
-Create an `AirTableConfig` with your credentials. Keep the personal access token and base/table IDs out of source control.
+Load credentials from environment variables (recommended for CI and build scripts):
 
 ```dart
 import 'package:flutter_belgium_data/flutter_belgium_data.dart';
 
+final config = AirTableConfig.fromEnvironment();
+```
+
+Required environment variables:
+
+| Variable | Description |
+| -------- | ----------- |
+| `AIRTABLE_TOKEN` | Personal access token |
+| `AIRTABLE_BASE` | Base ID (e.g. `appXXXXXXXXXX`) |
+| `AIRTABLE_TABLE_MEETUPS` | Meetups table ID |
+| `AIRTABLE_TABLE_PEOPLE` | People table ID |
+| `AIRTABLE_TABLE_TALKS` | Talks table ID |
+| `AIRTABLE_TABLE_LOCATIONS` | Locations/companies table ID |
+
+`fromEnvironment()` throws a `StateError` listing every missing variable if any are absent.
+
+Or construct directly (useful when credentials come from another source):
+
+```dart
 const config = AirTableConfig(
   personalAccessToken: 'pat...',
   base: 'appXXXXXXXXXX',
@@ -96,6 +115,18 @@ final data = FlutterBelgiumData(flutterBelgiumRepository: MockRepo());
 | `TeamMember`      | Organiser — name, role, avatar, optional GitHub/LinkedIn                             |
 | `Testimonial`     | Quote with a Person author                                                            |
 | `CommunityLinks`  | Slack, YouTube, Meetup.com, LinkedIn, GitHub, Made-In URLs                           |
+
+All models support `fromJson` / `toJson` using normalized camelCase JSON (dates as ISO 8601 strings). This enables caching, static site generation, and testing models in isolation without hitting AirTable:
+
+```dart
+// Serialize
+final json = meetup.toJson();
+
+// Deserialize
+final meetup = Meetup.fromJson(json);
+final talk   = Talk.fromJson(json);
+final person = Person.fromJson(json);
+```
 
 **Skip behaviour:** Records missing required display fields (e.g. a meetup without a date, a person without a photo) are silently skipped so incomplete AirTable data never causes a crash.
 
