@@ -48,4 +48,26 @@ void main() {
       expect(p.activeCompany, isNull);
     });
   });
+
+  group('Person fromJson/toJson', () {
+    test('round-trips through json', () {
+      const original = Person(
+        id: 'recP1',
+        name: 'Koen Van Looveren',
+        avatarUrl: 'assets/flutter_belgium/people/avatars/recP1.jpg',
+        companies: [PersonCompany(name: 'impaktfull', jobTitle: 'Founder', isActive: true)],
+        githubUsername: 'vanlooverenkoen',
+        socialLinks: PersonSocialLinks(githubUrl: 'https://github.com/vanlooverenkoen'),
+      );
+      final json = original.toJson();
+      final restored = Person.fromJson(json);
+      expect(restored.id, original.id);
+      expect(restored.name, original.name);
+      expect(restored.avatarUrl, original.avatarUrl);
+      expect(restored.githubUsername, original.githubUsername);
+      expect(restored.companies.first.name, original.companies.first.name);
+      expect(restored.companies.first.jobTitle, original.companies.first.jobTitle);
+      expect(restored.socialLinks.githubUrl, original.socialLinks.githubUrl);
+    });
+  });
 }

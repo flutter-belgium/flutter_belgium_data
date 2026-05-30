@@ -49,4 +49,41 @@ void main() {
       expect(t.thumbnailUrl, isNull);
     });
   });
+
+  group('Talk fromJson/toJson', () {
+    test('round-trips through json', () {
+      const speaker = Person(
+        id: 'recP1',
+        name: 'Koen',
+        avatarUrl: 'assets/flutter_belgium/people/avatars/recP1.jpg',
+        companies: [],
+        socialLinks: PersonSocialLinks(),
+      );
+      final original = Talk(
+        id: 'recT1',
+        title: 'Flutter Perf',
+        date: DateTime(2026, 2, 3),
+        youtubeUrl: 'https://www.youtube.com/watch?v=abc123',
+        speakers: const [speaker],
+      );
+      final json = original.toJson();
+      final restored = Talk.fromJson(json);
+      expect(restored.id, original.id);
+      expect(restored.title, original.title);
+      expect(restored.date, original.date);
+      expect(restored.youtubeUrl, original.youtubeUrl);
+      expect(restored.speakers.first.name, original.speakers.first.name);
+    });
+
+    test('round-trips with null youtubeUrl', () {
+      final original = Talk(
+        id: 'recT1',
+        title: 'Flutter Perf',
+        date: DateTime(2026, 2, 3),
+        speakers: const [],
+      );
+      final restored = Talk.fromJson(original.toJson());
+      expect(restored.youtubeUrl, isNull);
+    });
+  });
 }

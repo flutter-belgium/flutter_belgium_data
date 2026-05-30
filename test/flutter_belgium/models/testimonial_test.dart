@@ -22,4 +22,24 @@ void main() {
       expect(t.author.name, 'Koen Van Looveren');
     });
   });
+
+  group('Testimonial fromJson/toJson', () {
+    test('round-trips through json', () {
+      const author = Person(
+        id: 'recP1',
+        name: 'Koen Van Looveren',
+        avatarUrl: '/assets/team/koen.jpeg',
+        companies: [],
+        socialLinks: PersonSocialLinks(),
+      );
+      const original = Testimonial(
+        text: 'Flutter Belgium is great.',
+        author: author,
+      );
+      final json = original.toJson();
+      final restored = Testimonial.fromJson(json);
+      expect(restored.text, original.text);
+      expect(restored.author.name, original.author.name);
+    });
+  });
 }
