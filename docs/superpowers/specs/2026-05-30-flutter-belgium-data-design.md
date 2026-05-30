@@ -105,27 +105,27 @@ Called as `FlutterBelgiumData.tools.downloadMadeInAssets(outputPath: 'assets/mad
 
 ### Full models (fetched individually from API)
 
-| Class | Key fields |
-|---|---|
-| `MadeInApp` | `name`, `localIconPath`, `description`, `publisherCompany`, `releaseDate`, `isSunsetted`, `sunsetReason`, `links`, `localBannerPath`, `screenshotPaths`, `developers`, `involvedCompanies` |
-| `MadeInCompany` | `name`, `localLogoPath`, `useLogoInsteadOfTextTitle`, `isAgency`, `description`, `links`, `developers`, `projects`, `involvedProjects` |
-| `MadeInDeveloper` | `githubUserName`, `localAvatarPath`, `name`, `description`, `links`, `projects` |
+| Class             | Key fields                                                                                                                                                                                 |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `MadeInApp`       | `name`, `localIconPath`, `description`, `publisherCompany`, `releaseDate`, `isSunsetted`, `sunsetReason`, `links`, `localBannerPath`, `screenshotPaths`, `developers`, `involvedCompanies` |
+| `MadeInCompany`   | `name`, `localLogoPath`, `useLogoInsteadOfTextTitle`, `isAgency`, `description`, `links`, `developers`, `projects`, `involvedProjects`                                                     |
+| `MadeInDeveloper` | `githubUserName`, `localAvatarPath`, `name`, `description`, `links`, `projects`                                                                                                            |
 
 ### Reference models (used inside full models)
 
-| Class | Key fields |
-|---|---|
-| `MadeInAppRef` | `name`, `localIconPath` |
-| `MadeInCompanyRef` | `name`, `localLogoPath`, `useLogoInsteadOfTextTitle` |
-| `MadeInDeveloperRef` | `githubUserName`, `localAvatarPath` |
+| Class                | Key fields                                           |
+| -------------------- | ---------------------------------------------------- |
+| `MadeInAppRef`       | `name`, `localIconPath`                              |
+| `MadeInCompanyRef`   | `name`, `localLogoPath`, `useLogoInsteadOfTextTitle` |
+| `MadeInDeveloperRef` | `githubUserName`, `localAvatarPath`                  |
 
 ### Link models
 
-| Class | Key fields |
-|---|---|
-| `MadeInAppLinks` | `appstore`, `playstore`, `webApp`, `marketingWebsite`, `youTube`, `demoYouTubeVideo`, `openSourceCode` |
-| `MadeInCompanyLinks` | `website` (required), `jobWebsite` (optional) |
-| `MadeInDeveloperLinks` | `linkedin`, `personalWebsite`, `freelanceWebsite` |
+| Class                  | Key fields                                                                                             |
+| ---------------------- | ------------------------------------------------------------------------------------------------------ |
+| `MadeInAppLinks`       | `appstore`, `playstore`, `webApp`, `marketingWebsite`, `youTube`, `demoYouTubeVideo`, `openSourceCode` |
+| `MadeInCompanyLinks`   | `website` (required), `jobWebsite` (optional)                                                          |
+| `MadeInDeveloperLinks` | `linkedin`, `personalWebsite`, `freelanceWebsite`                                                      |
 
 All models are immutable and implement `fromJson()` factory constructors.
 
@@ -155,6 +155,7 @@ Base URL: `https://api.madein.flutterbelgium.be` (private constant, not configur
 Where `{type}` is `projects`, `companies`, or `developers`.
 
 **Error handling:**
+
 - Minimized list fetch failure → throws (nothing to return).
 - Individual item fetch failure → caught, logged, skipped (partial results returned).
 
@@ -165,6 +166,7 @@ No mock repository is included in this package.
 Located in `made_in_flutter_belgium/util/made_in_utils.dart`. Pure string transformation — converts remote API image URLs to local `assets/made_in/...` paths.
 
 Handles two domains:
+
 - `api.madein.flutterbelgium.be` → `assets/made_in/...`
 - `avatars.githubusercontent.com` → `assets/made_in/developers/{username}/avatar.jpg`
 
@@ -186,23 +188,23 @@ Downloads all project icons/banners/screenshots, company logos, and developer av
 
 One test file per source file, mirrored folder structure, 100% code coverage per file.
 
-| Test file | Coverage target |
-|---|---|
-| `flutter_belgium_data_test.dart` | Constructor defaulting, all 3 get methods, tools accessor |
-| `flutter_belgium_tools_test.dart` | `downloadMadeInAssets` with default and custom `outputPath` |
-| `made_in_app_test.dart` | `fromJson()` — all fields including optionals/nullables |
-| `made_in_app_ref_test.dart` | `fromJson()` |
-| `made_in_app_links_test.dart` | `fromJson()` — all optional link fields |
-| `made_in_company_test.dart` | `fromJson()` — all fields |
-| `made_in_company_ref_test.dart` | `fromJson()` |
-| `made_in_company_links_test.dart` | `fromJson()` — required + optional fields |
-| `made_in_developer_test.dart` | `fromJson()` — all fields |
-| `made_in_developer_ref_test.dart` | `fromJson()` |
-| `made_in_developer_links_test.dart` | `fromJson()` — all optional fields |
-| `made_in_flutter_belgium_repository_test.dart` | Abstract interface — verified via concrete stub |
-| `http_made_in_flutter_belgium_repository_test.dart` | Two-stage fetch, partial failure, list failure |
-| `made_in_utils_test.dart` | Both URL domains, edge cases |
-| `made_in_downloader_test.dart` | File/directory creation, custom outputPath, default outputPath |
+| Test file                                           | Coverage target                                                |
+| --------------------------------------------------- | -------------------------------------------------------------- |
+| `flutter_belgium_data_test.dart`                    | Constructor defaulting, all 3 get methods, tools accessor      |
+| `flutter_belgium_tools_test.dart`                   | `downloadMadeInAssets` with default and custom `outputPath`    |
+| `made_in_app_test.dart`                             | `fromJson()` — all fields including optionals/nullables        |
+| `made_in_app_ref_test.dart`                         | `fromJson()`                                                   |
+| `made_in_app_links_test.dart`                       | `fromJson()` — all optional link fields                        |
+| `made_in_company_test.dart`                         | `fromJson()` — all fields                                      |
+| `made_in_company_ref_test.dart`                     | `fromJson()`                                                   |
+| `made_in_company_links_test.dart`                   | `fromJson()` — required + optional fields                      |
+| `made_in_developer_test.dart`                       | `fromJson()` — all fields                                      |
+| `made_in_developer_ref_test.dart`                   | `fromJson()`                                                   |
+| `made_in_developer_links_test.dart`                 | `fromJson()` — all optional fields                             |
+| `made_in_flutter_belgium_repository_test.dart`      | Abstract interface — verified via concrete stub                |
+| `http_made_in_flutter_belgium_repository_test.dart` | Two-stage fetch, partial failure, list failure                 |
+| `made_in_utils_test.dart`                           | Both URL domains, edge cases                                   |
+| `made_in_downloader_test.dart`                      | File/directory creation, custom outputPath, default outputPath |
 
 ## Distribution
 
