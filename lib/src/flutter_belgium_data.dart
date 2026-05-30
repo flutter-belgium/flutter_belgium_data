@@ -7,26 +7,32 @@ import 'package:flutter_belgium_data/src/made_in_flutter_belgium/models/made_in_
 import 'package:flutter_belgium_data/src/made_in_flutter_belgium/models/made_in_developer.dart';
 import 'package:flutter_belgium_data/src/made_in_flutter_belgium/repository/http_made_in_flutter_belgium_repository.dart';
 import 'package:flutter_belgium_data/src/made_in_flutter_belgium/repository/made_in_flutter_belgium_repository.dart';
+import 'package:meta/meta.dart';
 
 class FlutterBelgiumData {
   FlutterBelgiumData({
-    MadeInFlutterBelgiumRepository? madeInRepository,
-    FlutterBelgiumRepository? flutterBelgiumRepository,
-    AirTableConfig? airTableConfig,
-  }) : _madeInRepository =
-           madeInRepository ?? HttpMadeInFlutterBelgiumRepository(),
+    required AirTableConfig airTableConfig,
+    bool logMissingData = true,
+    @visibleForTesting FlutterBelgiumRepository? flutterBelgiumRepository,
+    @visibleForTesting MadeInFlutterBelgiumRepository? madeInRepository,
+  }) : _logMissingData = logMissingData,
        _flutterBelgiumRepository =
            flutterBelgiumRepository ??
-           (airTableConfig != null
-               ? AirtableFlutterBelgiumRepository(config: airTableConfig)
-               : null);
+           AirtableFlutterBelgiumRepository(
+             config: airTableConfig,
+             logMissingData: logMissingData,
+           ),
+       _madeInRepository =
+           madeInRepository ?? HttpMadeInFlutterBelgiumRepository();
 
+  final bool _logMissingData;
+  final FlutterBelgiumRepository _flutterBelgiumRepository;
   final MadeInFlutterBelgiumRepository _madeInRepository;
-  final FlutterBelgiumRepository? _flutterBelgiumRepository;
 
-  static FlutterBelgiumTools get tools => const FlutterBelgiumTools();
+  FlutterBelgiumTools get tools =>
+      FlutterBelgiumTools(logMissingData: _logMissingData);
 
-  FlutterBelgiumRepository? get flutterBelgium => _flutterBelgiumRepository;
+  FlutterBelgiumRepository get flutterBelgium => _flutterBelgiumRepository;
 
   Future<List<MadeInApp>> getMadeInApps() => _madeInRepository.getApps();
 

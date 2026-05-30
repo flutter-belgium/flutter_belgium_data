@@ -38,6 +38,16 @@ const _companyRecords = '''
         "Logo": [{"id":"attL2","url":"https://dl.airtable.com/logo2.png","filename":"nwlogo.png","size":1000,"type":"image/png"}],
         "Status": "Active"
       }
+    },
+    {
+      "id": "recCOMPANY_NO_NAME",
+      "createdTime": "2023-07-11T12:05:12.000Z",
+      "fields": {
+        "Address": "Some Street",
+        "Website URL": "https://noname.be",
+        "Logo": [{"id":"attL3","url":"https://dl.airtable.com/logo3.png","filename":"noname_logo.png","size":1000,"type":"image/png"}],
+        "Status": "Active"
+      }
     }
   ]
 }
@@ -62,6 +72,14 @@ const _peopleRecords = '''
         "Name": "No Photo Person",
         "Companies": ["recCOMPANY1"]
       }
+    },
+    {
+      "id": "recPERSON_NO_NAME",
+      "createdTime": "2023-08-25T16:09:13.000Z",
+      "fields": {
+        "Photo": [{"id":"attP2","url":"https://dl.airtable.com/photo2.jpg","filename":"noname.jpg","size":100,"type":"image/jpeg"}],
+        "Companies": ["recCOMPANY1"]
+      }
     }
   ]
 }
@@ -77,6 +95,31 @@ const _talkRecords = '''
         "Name": "Building performant Flutter apps",
         "Status": "Confirmed",
         "Speaker(s)": ["recPERSON1"]
+      }
+    },
+    {
+      "id": "recTALK_NO_NAME",
+      "createdTime": "2024-01-01T10:00:00.000Z",
+      "fields": {
+        "Status": "Confirmed",
+        "Speaker(s)": ["recPERSON1"]
+      }
+    },
+    {
+      "id": "recTALK_NO_SPEAKERS",
+      "createdTime": "2024-01-01T10:00:00.000Z",
+      "fields": {
+        "Name": "A talk with no speakers",
+        "Status": "Confirmed"
+      }
+    },
+    {
+      "id": "recTALK_UNKNOWN_SPEAKER",
+      "createdTime": "2024-01-01T10:00:00.000Z",
+      "fields": {
+        "Name": "A talk with unknown speaker",
+        "Status": "Confirmed",
+        "Speaker(s)": ["recPERSON_UNKNOWN"]
       }
     }
   ]
@@ -128,6 +171,46 @@ const _meetupRecords = '''
         "Date": "2099-01-01T17:00:00.000Z",
         "Location": ["recCOMPANY1"],
         "Meetup URL": "https://www.meetup.com/flutter-belgium/events/999"
+      }
+    },
+    {
+      "id": "recMEETUP_NO_NAME",
+      "createdTime": "2023-07-11T12:11:46.000Z",
+      "fields": {
+        "Status": "Confirmed",
+        "Date": "2026-06-01T17:00:00.000Z",
+        "Location": ["recCOMPANY1"]
+      }
+    },
+    {
+      "id": "recMEETUP_INVALID_DATE",
+      "createdTime": "2023-07-11T12:11:46.000Z",
+      "fields": {
+        "Name": "Meetup invalid date",
+        "Status": "Confirmed",
+        "Date": "not-a-date",
+        "Location": ["recCOMPANY1"]
+      }
+    },
+    {
+      "id": "recMEETUP_SKIPPED_LOCATION",
+      "createdTime": "2023-07-11T12:11:46.000Z",
+      "fields": {
+        "Name": "Meetup skipped location",
+        "Status": "Confirmed",
+        "Date": "2026-06-01T17:00:00.000Z",
+        "Location": ["recCOMPANY_NO_LOGO"]
+      }
+    },
+    {
+      "id": "recMEETUP_WITH_SKIPPED_TALKS",
+      "createdTime": "2023-07-11T12:11:46.000Z",
+      "fields": {
+        "Name": "Meetup with skipped talks",
+        "Status": "Confirmed",
+        "Date": "2026-02-04T17:00:00.000Z",
+        "Location": ["recCOMPANY1"],
+        "Talks": ["recTALK_NO_NAME", "recTALK_NO_SPEAKERS", "recTALK_UNKNOWN_SPEAKER", "recTALK_NOT_IN_TABLE"]
       }
     }
   ]
@@ -201,6 +284,18 @@ void main() {
       final companies = await repo.getHostingCompanies();
       expect(companies.any((c) => c.name == 'No Website Co'), isFalse);
     });
+
+    test('skips company without Name', () async {
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
+      final companies = await repo.getHostingCompanies();
+      expect(
+        companies.any((c) => c.websiteUrl == 'https://noname.be'),
+        isFalse,
+      );
+    });
   });
 
   group('AirtableFlutterBelgiumRepository - persons', () {
@@ -225,6 +320,16 @@ void main() {
       );
       final persons = await repo.getPersons();
       expect(persons.any((p) => p.name == 'No Photo Person'), isFalse);
+    });
+
+    test('skips person without Name', () async {
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
+      final persons = await repo.getPersons();
+      // Only recPERSON1 is valid (no-photo and no-name are both skipped)
+      expect(persons.length, 1);
     });
 
     test('person has company resolved from company map', () async {
@@ -298,6 +403,48 @@ void main() {
       expect(meetup, isNull);
     });
 
+    test('skips meetup without Name', () async {
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
+      // recMEETUP_NO_NAME has no Name field — it should be skipped entirely
+      final allMeetups = await repo.getUpcomingMeetups();
+      // Even with a valid date/location, no-name meetup must not appear
+      expect(allMeetups.any((m) => m.id == 'recMEETUP_NO_NAME'), isFalse);
+    });
+
+    test('skips meetup with invalid date string', () async {
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
+      final meetup = await repo.getMeetupBySlug('meetup-invalid-date');
+      expect(meetup, isNull);
+    });
+
+    test('skips meetup whose location was itself skipped', () async {
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
+      final meetup = await repo.getMeetupBySlug('meetup-skipped-location');
+      expect(meetup, isNull);
+    });
+
+    test(
+      'meetup with all-invalid talks still appears with empty talks',
+      () async {
+        final repo = AirtableFlutterBelgiumRepository(
+          config: _config,
+          client: _mockClient(),
+        );
+        final meetup = await repo.getMeetupBySlug('meetup-with-skipped-talks');
+        expect(meetup, isNotNull);
+        expect(meetup!.talks, isEmpty);
+      },
+    );
+
     test('getPastMeetups returns past meetups sorted newest first', () async {
       final repo = AirtableFlutterBelgiumRepository(
         config: _config,
@@ -344,6 +491,23 @@ void main() {
       expect(talks.first.title, 'Building performant Flutter apps');
       expect(talks.first.speakers.first.name, 'Koen Van Looveren');
     });
+
+    test(
+      'getAllTalks does not include talks from meetup-with-skipped-talks',
+      () async {
+        final repo = AirtableFlutterBelgiumRepository(
+          config: _config,
+          client: _mockClient(),
+        );
+        final talks = await repo.getAllTalks();
+        // Only recTALK1 is valid; skipped talk titles must not appear
+        expect(talks.any((t) => t.title == 'A talk with no speakers'), isFalse);
+        expect(
+          talks.any((t) => t.title == 'A talk with unknown speaker'),
+          isFalse,
+        );
+      },
+    );
   });
 
   group('AirtableFlutterBelgiumRepository - hardcoded data', () {
@@ -426,6 +590,32 @@ void main() {
       final firstCallCount = callCount;
       await repo.getPersons();
       expect(callCount, firstCallCount);
+    });
+  });
+
+  group('AirtableFlutterBelgiumRepository - logMissingData', () {
+    test(
+      'logMissingData false suppresses skip logging and returns valid data',
+      () async {
+        final repo = AirtableFlutterBelgiumRepository(
+          config: _config,
+          logMissingData: false,
+          client: _mockClient(),
+        );
+        // Should not throw and should return valid results (only 1 valid company)
+        final companies = await repo.getHostingCompanies();
+        expect(companies.length, 1);
+        expect(companies.first.name, 'ACA Group');
+      },
+    );
+
+    test('logMissingData true is the default', () async {
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
+      final companies = await repo.getHostingCompanies();
+      expect(companies.length, 1);
     });
   });
 }

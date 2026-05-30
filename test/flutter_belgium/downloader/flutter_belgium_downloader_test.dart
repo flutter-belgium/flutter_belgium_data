@@ -175,5 +175,54 @@ void main() {
         completes,
       );
     });
+
+    test('skips person without photo gracefully', () async {
+      final clientNoPhoto = MockClient((request) async {
+        if (request.url.toString().contains('tblPEOPLE')) {
+          return http.Response(
+            '{"records":[{"id":"recP2","createdTime":"2023-01-01T00:00:00.000Z","fields":{"Name":"NoPhoto"}}]}',
+            200,
+            headers: {'content-type': 'application/json'},
+          );
+        }
+        return http.Response(
+          '{"records":[]}',
+          200,
+          headers: {'content-type': 'application/json'},
+        );
+      });
+      await expectLater(
+        FlutterBelgiumDownloader.downloadFlutterBelgiumAssets(
+          _config,
+          tempDir.path,
+          client: clientNoPhoto,
+        ),
+        completes,
+      );
+    });
+
+    test('logMissingData false does not throw', () async {
+      await expectLater(
+        FlutterBelgiumDownloader.downloadFlutterBelgiumAssets(
+          _config,
+          tempDir.path,
+          client: _mockClient(),
+          logMissingData: false,
+        ),
+        completes,
+      );
+    });
+
+    test('logMissingData true (default) does not throw', () async {
+      await expectLater(
+        FlutterBelgiumDownloader.downloadFlutterBelgiumAssets(
+          _config,
+          tempDir.path,
+          client: _mockClient(),
+          logMissingData: true,
+        ),
+        completes,
+      );
+    });
   });
 }

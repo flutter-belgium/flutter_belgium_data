@@ -24,11 +24,11 @@ import 'package:http/http.dart' as http;
 class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
   AirtableFlutterBelgiumRepository({
     required AirTableConfig config,
+    bool logMissingData = true,
     http.Client? client,
-    FlutterBelgiumLogger logger = const FlutterBelgiumLogger(),
   }) : _config = config,
        _client = client ?? http.Client(),
-       _logger = logger;
+       _logger = FlutterBelgiumLogger(logMissingData: logMissingData);
 
   final AirTableConfig _config;
   final http.Client _client;
@@ -49,7 +49,9 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     for (final record in records) {
       final locationFields = AirtableLocationFields.fromJson(record.fields);
       if (locationFields.name == null) {
-        _logger.skippedRecord('Skipping company ${record.id}: missing "Name" field');
+        _logger.skippedRecord(
+          'Skipping company ${record.id}: missing "Name" field',
+        );
         continue;
       }
       if (locationFields.logo.isEmpty) {
@@ -87,7 +89,9 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     for (final record in records) {
       final personFields = AirtablePersonFields.fromJson(record.fields);
       if (personFields.name == null) {
-        _logger.skippedRecord('Skipping person ${record.id}: missing "Name" field');
+        _logger.skippedRecord(
+          'Skipping person ${record.id}: missing "Name" field',
+        );
         continue;
       }
       if (personFields.photo.isEmpty) {
@@ -142,7 +146,9 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     for (final record in meetupRecords) {
       final meetupFields = AirtableMeetupFields.fromJson(record.fields);
       if (meetupFields.name == null) {
-        _logger.skippedRecord('Skipping meetup ${record.id}: missing "Name" field');
+        _logger.skippedRecord(
+          'Skipping meetup ${record.id}: missing "Name" field',
+        );
         continue;
       }
       if (meetupFields.date == null) {

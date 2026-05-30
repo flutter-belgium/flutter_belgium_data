@@ -14,10 +14,11 @@ class FlutterBelgiumDownloader {
     AirTableConfig config,
     String outputDir, {
     http.Client? client,
-    FlutterBelgiumLogger logger = const FlutterBelgiumLogger(),
+    bool logMissingData = true,
   }) async {
     final httpClient = client ?? http.Client();
     final shouldClose = client == null;
+    final logger = FlutterBelgiumLogger(logMissingData: logMissingData);
     try {
       await _downloadCompanyLogos(config, outputDir, httpClient, logger);
       await _downloadPersonAvatars(config, outputDir, httpClient, logger);
