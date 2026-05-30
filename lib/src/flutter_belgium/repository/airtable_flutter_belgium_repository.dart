@@ -43,15 +43,22 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     final records = await _fetchAll(_config.tableLocations);
     final map = <String, _Location>{};
     for (final record in records) {
-      final f = AirtableLocationFields.fromJson(record.fields);
-      if (f.name == null || f.logo.isEmpty || f.websiteUrl == null) continue;
+      final locationFields = AirtableLocationFields.fromJson(record.fields);
+      if (locationFields.name == null ||
+          locationFields.logo.isEmpty ||
+          locationFields.websiteUrl == null) {
+        continue;
+      }
       map[record.id] = _Location(
         company: Company(
-          name: f.name!,
-          logoUrl: toLocalCompanyLogoPath(record.id, f.logo.first.filename),
-          websiteUrl: f.websiteUrl!,
+          name: locationFields.name!,
+          logoUrl: toLocalCompanyLogoPath(
+            record.id,
+            locationFields.logo.first.filename,
+          ),
+          websiteUrl: locationFields.websiteUrl!,
         ),
-        address: f.address,
+        address: locationFields.address,
       );
     }
     return map;
@@ -63,9 +70,9 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     final records = await _fetchAll(_config.tablePeople);
     final map = <String, Person>{};
     for (final record in records) {
-      final f = AirtablePersonFields.fromJson(record.fields);
-      if (f.name == null || f.photo.isEmpty) continue;
-      final personCompanies = f.companyIds
+      final personFields = AirtablePersonFields.fromJson(record.fields);
+      if (personFields.name == null || personFields.photo.isEmpty) continue;
+      final personCompanies = personFields.companyIds
           .map((cid) {
             final loc = locations[cid];
             if (loc == null) return null;
@@ -75,8 +82,11 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
           .toList();
       map[record.id] = Person(
         id: record.id,
-        name: f.name!,
-        avatarUrl: toLocalPersonAvatarPath(record.id, f.photo.first.filename),
+        name: personFields.name!,
+        avatarUrl: toLocalPersonAvatarPath(
+          record.id,
+          personFields.photo.first.filename,
+        ),
         companies: personCompanies,
         socialLinks: const PersonSocialLinks(),
       );
@@ -93,8 +103,8 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
   Future<void> _doLoad() async {
     final talkRecords = await _fetchAll(_config.tableTalks);
     final rawTalks = <String, AirtableTalkFields>{};
-    for (final r in talkRecords) {
-      rawTalks[r.id] = AirtableTalkFields.fromJson(r.fields);
+    for (final talkRecord in talkRecords) {
+      rawTalks[talkRecord.id] = AirtableTalkFields.fromJson(talkRecord.fields);
     }
 
     final locationMap = await _fetchLocations();
@@ -106,26 +116,34 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     final seenTalkIds = <String>{};
 
     for (final record in meetupRecords) {
-      final f = AirtableMeetupFields.fromJson(record.fields);
-      if (f.name == null || f.date == null || f.locationIds.isEmpty) continue;
-      final location = locationMap[f.locationIds.first];
+      final meetupFields = AirtableMeetupFields.fromJson(record.fields);
+      if (meetupFields.name == null ||
+          meetupFields.date == null ||
+          meetupFields.locationIds.isEmpty) {
+        continue;
+      }
+      final location = locationMap[meetupFields.locationIds.first];
       if (location == null) continue;
-      final date = DateTime.tryParse(f.date!);
+      final date = DateTime.tryParse(meetupFields.date!);
       if (date == null) continue;
 
       final meetupTalks = <Talk>[];
-      for (final talkId in f.talkIds) {
+      for (final talkId in meetupFields.talkIds) {
         if (seenTalkIds.contains(talkId)) continue;
-        final tf = rawTalks[talkId];
-        if (tf == null || tf.name == null || tf.speakerIds.isEmpty) continue;
-        final speakers = tf.speakerIds
+        final talkFields = rawTalks[talkId];
+        if (talkFields == null ||
+            talkFields.name == null ||
+            talkFields.speakerIds.isEmpty) {
+          continue;
+        }
+        final speakers = talkFields.speakerIds
             .map((pid) => personMap[pid])
             .whereType<Person>()
             .toList();
         if (speakers.isEmpty) continue;
         final talk = Talk(
           id: talkId,
-          title: tf.name!,
+          title: talkFields.name!,
           date: date,
           speakers: speakers,
         );
@@ -137,16 +155,19 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
       allMeetups.add(
         Meetup(
           id: record.id,
-          title: f.name!,
+          title: meetupFields.name!,
           date: date,
           hostCompany: location.company.name,
           location: location.address,
           talks: meetupTalks,
-          description: f.description,
-          thumbnailUrl: f.poster.isNotEmpty
-              ? toLocalMeetupPosterPath(record.id, f.poster.first.filename)
+          description: meetupFields.description,
+          thumbnailUrl: meetupFields.poster.isNotEmpty
+              ? toLocalMeetupPosterPath(
+                  record.id,
+                  meetupFields.poster.first.filename,
+                )
               : null,
-          meetupUrl: f.meetupUrl,
+          meetupUrl: meetupFields.meetupUrl,
         ),
       );
     }

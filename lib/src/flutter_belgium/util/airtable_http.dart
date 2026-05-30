@@ -15,11 +15,9 @@ Future<List<AirtableRecord>> fetchAllAirtableRecords(
   final records = <AirtableRecord>[];
   String? offset;
   do {
-    final params = <String, String>{};
-    if (offset != null) params['offset'] = offset;
     final uri = Uri.parse(
       '$_baseUrl/v0/${config.base}/$tableId',
-    ).replace(queryParameters: params.isEmpty ? null : params);
+    ).replace(queryParameters: offset != null ? {'offset': offset} : null);
     final response = await client.get(
       uri,
       headers: {'Authorization': 'Bearer ${config.personalAccessToken}'},

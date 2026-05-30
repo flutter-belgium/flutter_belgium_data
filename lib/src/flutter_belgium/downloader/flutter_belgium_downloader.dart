@@ -14,25 +14,25 @@ class FlutterBelgiumDownloader {
     String outputDir, {
     http.Client? client,
   }) async {
-    final c = client ?? http.Client();
+    final httpClient = client ?? http.Client();
     final shouldClose = client == null;
     try {
-      await _downloadCompanyLogos(config, outputDir, c);
-      await _downloadPersonAvatars(config, outputDir, c);
-      await _downloadMeetupPosters(config, outputDir, c);
+      await _downloadCompanyLogos(config, outputDir, httpClient);
+      await _downloadPersonAvatars(config, outputDir, httpClient);
+      await _downloadMeetupPosters(config, outputDir, httpClient);
     } finally {
-      if (shouldClose) c.close();
+      if (shouldClose) httpClient.close();
     }
   }
 
   static Future<void> _downloadFile(
-    http.Client client,
+    http.Client httpClient,
     String url,
     String localPath,
   ) async {
     try {
       await Directory(localPath).parent.create(recursive: true);
-      final response = await client.get(Uri.parse(url));
+      final response = await httpClient.get(Uri.parse(url));
       if (response.statusCode < 200 || response.statusCode >= 300) {
         print('  ✗ $url: HTTP ${response.statusCode}');
         return;
@@ -47,21 +47,21 @@ class FlutterBelgiumDownloader {
   static Future<void> _downloadCompanyLogos(
     AirTableConfig config,
     String outputDir,
-    http.Client client,
+    http.Client httpClient,
   ) async {
     print('Downloading company logos...');
     final records = await fetchAllAirtableRecords(
       config,
       config.tableLocations,
-      client,
+      httpClient,
     );
     for (final record in records) {
-      final f = AirtableLocationFields.fromJson(record.fields);
-      if (f.logo.isEmpty) continue;
+      final fields = AirtableLocationFields.fromJson(record.fields);
+      if (fields.logo.isEmpty) continue;
       await _downloadFile(
-        client,
-        f.logo.first.url,
-        '$outputDir/${toLocalCompanyLogoPath(record.id, f.logo.first.filename)}',
+        httpClient,
+        fields.logo.first.url,
+        '$outputDir/${toLocalCompanyLogoPath(record.id, fields.logo.first.filename)}',
       );
     }
   }
@@ -69,21 +69,21 @@ class FlutterBelgiumDownloader {
   static Future<void> _downloadPersonAvatars(
     AirTableConfig config,
     String outputDir,
-    http.Client client,
+    http.Client httpClient,
   ) async {
     print('Downloading person avatars...');
     final records = await fetchAllAirtableRecords(
       config,
       config.tablePeople,
-      client,
+      httpClient,
     );
     for (final record in records) {
-      final f = AirtablePersonFields.fromJson(record.fields);
-      if (f.photo.isEmpty) continue;
+      final fields = AirtablePersonFields.fromJson(record.fields);
+      if (fields.photo.isEmpty) continue;
       await _downloadFile(
-        client,
-        f.photo.first.url,
-        '$outputDir/${toLocalPersonAvatarPath(record.id, f.photo.first.filename)}',
+        httpClient,
+        fields.photo.first.url,
+        '$outputDir/${toLocalPersonAvatarPath(record.id, fields.photo.first.filename)}',
       );
     }
   }
@@ -91,21 +91,21 @@ class FlutterBelgiumDownloader {
   static Future<void> _downloadMeetupPosters(
     AirTableConfig config,
     String outputDir,
-    http.Client client,
+    http.Client httpClient,
   ) async {
     print('Downloading meetup posters...');
     final records = await fetchAllAirtableRecords(
       config,
       config.tableMeetups,
-      client,
+      httpClient,
     );
     for (final record in records) {
-      final f = AirtableMeetupFields.fromJson(record.fields);
-      if (f.poster.isEmpty) continue;
+      final fields = AirtableMeetupFields.fromJson(record.fields);
+      if (fields.poster.isEmpty) continue;
       await _downloadFile(
-        client,
-        f.poster.first.url,
-        '$outputDir/${toLocalMeetupPosterPath(record.id, f.poster.first.filename)}',
+        httpClient,
+        fields.poster.first.url,
+        '$outputDir/${toLocalMeetupPosterPath(record.id, fields.poster.first.filename)}',
       );
     }
   }

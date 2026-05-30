@@ -8,14 +8,14 @@ Future<void> downloadMadeInAssets({
   String outputPath = 'web/assets/made_in',
   http.Client? client,
 }) async {
-  final c = client ?? http.Client();
+  final httpClient = client ?? http.Client();
   final shouldClose = client == null;
   try {
-    await _downloadProjects(c, outputPath);
-    await _downloadCompanies(c, outputPath);
-    await _downloadDevelopers(c, outputPath);
+    await _downloadProjects(httpClient, outputPath);
+    await _downloadCompanies(httpClient, outputPath);
+    await _downloadDevelopers(httpClient, outputPath);
   } finally {
-    if (shouldClose) c.close();
+    if (shouldClose) httpClient.close();
   }
 }
 
