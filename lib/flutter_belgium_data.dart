@@ -13,3 +13,20 @@ export 'src/made_in_flutter_belgium/models/made_in_developer_ref.dart';
 export 'src/made_in_flutter_belgium/repository/http_made_in_flutter_belgium_repository.dart';
 export 'src/made_in_flutter_belgium/repository/made_in_flutter_belgium_repository.dart';
 export 'src/made_in_flutter_belgium/util/made_in_utils.dart';
+
+// Flutter Belgium — AirTable data layer
+export 'src/flutter_belgium/config/airtable_config.dart';
+export 'src/flutter_belgium/downloader/flutter_belgium_downloader.dart';
+export 'src/flutter_belgium/models/community_links.dart';
+export 'src/flutter_belgium/models/company.dart';
+export 'src/flutter_belgium/models/meetup.dart';
+export 'src/flutter_belgium/models/person.dart';
+export 'src/flutter_belgium/models/person_company.dart';
+export 'src/flutter_belgium/models/person_social_links.dart';
+export 'src/flutter_belgium/models/sponsor.dart';
+export 'src/flutter_belgium/models/talk.dart';
+export 'src/flutter_belgium/models/team_member.dart';
+export 'src/flutter_belgium/models/testimonial.dart';
+export 'src/flutter_belgium/repository/airtable_flutter_belgium_repository.dart';
+export 'src/flutter_belgium/repository/flutter_belgium_repository.dart';
+export 'src/flutter_belgium/util/flutter_belgium_utils.dart';
