@@ -14,4 +14,19 @@ void main() {
       expect(c.websiteUrl, 'https://acagroup.be');
     });
   });
+
+  group('Company fromJson/toJson', () {
+    test('round-trips through json', () {
+      const original = Company(
+        name: 'ACA Group',
+        logoUrl: 'assets/flutter_belgium/companies/logos/recABC.png',
+        websiteUrl: 'https://acagroup.be',
+      );
+      final json = original.toJson();
+      final restored = Company.fromJson(json);
+      expect(restored.name, original.name);
+      expect(restored.logoUrl, original.logoUrl);
+      expect(restored.websiteUrl, original.websiteUrl);
+    });
+  });
 }

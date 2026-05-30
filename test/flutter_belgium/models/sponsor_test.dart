@@ -14,4 +14,19 @@ void main() {
       expect(s.websiteUrl, 'https://impaktfull.com');
     });
   });
+
+  group('Sponsor fromJson/toJson', () {
+    test('round-trips through json', () {
+      const original = Sponsor(
+        name: 'impaktfull',
+        logoUrl: '/assets/company/impaktfull.svg',
+        websiteUrl: 'https://impaktfull.com',
+      );
+      final json = original.toJson();
+      final restored = Sponsor.fromJson(json);
+      expect(restored.name, original.name);
+      expect(restored.logoUrl, original.logoUrl);
+      expect(restored.websiteUrl, original.websiteUrl);
+    });
+  });
 }

@@ -20,4 +20,25 @@ void main() {
       expect(links.madeInUrl, '/made-in-flutter-belgium/apps');
     });
   });
+
+  group('CommunityLinks fromJson/toJson', () {
+    test('round-trips through json', () {
+      const original = CommunityLinks(
+        slackInviteUrl: 'https://slack.example.com',
+        youtubeChannelUrl: 'https://youtube.com/@flutter-belgium',
+        meetupUrl: 'https://meetup.com/flutter-belgium',
+        linkedinUrl: 'https://linkedin.com/company/flutter-belgium',
+        githubUrl: 'https://github.com/flutter-belgium',
+        madeInUrl: '/made-in-flutter-belgium/apps',
+      );
+      final json = original.toJson();
+      final restored = CommunityLinks.fromJson(json);
+      expect(restored.slackInviteUrl, original.slackInviteUrl);
+      expect(restored.youtubeChannelUrl, original.youtubeChannelUrl);
+      expect(restored.meetupUrl, original.meetupUrl);
+      expect(restored.linkedinUrl, original.linkedinUrl);
+      expect(restored.githubUrl, original.githubUrl);
+      expect(restored.madeInUrl, original.madeInUrl);
+    });
+  });
 }
