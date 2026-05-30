@@ -1,7 +1,4 @@
 // lib/src/flutter_belgium/repository/airtable_flutter_belgium_repository.dart
-import 'dart:convert';
-import 'dart:io' show HttpException;
-
 import 'package:flutter_belgium_data/src/flutter_belgium/config/airtable_config.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/community_links.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/company.dart';
@@ -14,12 +11,11 @@ import 'package:flutter_belgium_data/src/flutter_belgium/models/talk.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/team_member.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/testimonial.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/repository/flutter_belgium_repository.dart';
+import 'package:flutter_belgium_data/src/flutter_belgium/util/airtable_http.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/util/flutter_belgium_utils.dart';
 import 'package:http/http.dart' as http;
 
 class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
-  static const _baseUrl = 'https://api.airtable.com';
-
   AirtableFlutterBelgiumRepository({
     required AirTableConfig config,
     http.Client? client,
@@ -35,30 +31,8 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
   List<Company>? _companies;
   Future<void>? _loadFuture;
 
-  Future<List<Map<String, dynamic>>> _fetchAll(String tableId) async {
-    final records = <Map<String, dynamic>>[];
-    String? offset;
-    do {
-      final params = <String, String>{};
-      if (offset != null) params['offset'] = offset;
-      final uri = Uri.parse('$_baseUrl/v0/${_config.base}/$tableId')
-          .replace(queryParameters: params.isEmpty ? null : params);
-      final response = await _client.get(uri, headers: {
-        'Authorization': 'Bearer ${_config.personalAccessToken}',
-      });
-      if (response.statusCode < 200 || response.statusCode >= 300) {
-        throw HttpException(
-          'AirTable HTTP ${response.statusCode} for $tableId',
-          uri: uri,
-        );
-      }
-      final data = json.decode(response.body) as Map<String, dynamic>;
-      final batch = (data['records'] as List).cast<Map<String, dynamic>>();
-      records.addAll(batch);
-      offset = data['offset'] as String?;
-    } while (offset != null);
-    return records;
-  }
+  Future<List<Map<String, dynamic>>> _fetchAll(String tableId) =>
+      fetchAllAirtableRecords(_config, tableId, _client);
 
   Future<Map<String, _Location>> _fetchLocations() async {
     final records = await _fetchAll(_config.tableLocations);
@@ -121,7 +95,10 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     return map;
   }
 
-  Future<void> _loadData() => _loadFuture ??= _doLoad();
+  Future<void> _loadData() => _loadFuture ??= _doLoad().catchError((Object e, StackTrace st) {
+        _loadFuture = null; // allow retry on transient failures
+        Error.throwWithStackTrace(e, st);
+      });
 
   Future<void> _doLoad() async {
     final talkRecords = await _fetchAll(_config.tableTalks);
@@ -136,6 +113,7 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     final meetupRecords = await _fetchAll(_config.tableMeetups);
     final allMeetups = <Meetup>[];
     final allTalks = <Talk>[];
+    final seenTalkIds = <String>{};
 
     for (final record in meetupRecords) {
       final fields = record['fields'] as Map<String, dynamic>;
@@ -157,6 +135,7 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
           (fields['Talks'] as List?)?.cast<String>() ?? <String>[];
       final meetupTalks = <Talk>[];
       for (final talkId in talkIds) {
+        if (seenTalkIds.contains(talkId)) continue;
         final talkFields = rawTalks[talkId];
         if (talkFields == null) continue;
         final talkName = talkFields['Name'] as String?;
@@ -173,6 +152,7 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
             id: talkId, title: talkName, date: date, speakers: speakers);
         meetupTalks.add(talk);
         allTalks.add(talk);
+        seenTalkIds.add(talkId);
       }
 
       final posterAttachments =
