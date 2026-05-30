@@ -1,18 +1,15 @@
 import 'package:flutter_belgium_data/src/made_in_flutter_belgium/util/made_in_utils.dart';
 
 class MadeInAppRef {
-  const MadeInAppRef({
-    required this.name,
-    required this.localIconPath,
-  });
+  const MadeInAppRef({required this.name, required this.localIconPath});
 
   final String name;
   final String localIconPath;
 
   factory MadeInAppRef.fromJson(Map<String, dynamic> json) => MadeInAppRef(
-        name: json['name'] as String,
-        localIconPath: toLocalImagePath(json['appIconUrl'] as String? ?? ''),
-      );
+    name: json['name'] as String,
+    localIconPath: toLocalImagePath(json['appIconUrl'] as String? ?? ''),
+  );
 
   @override
   bool operator ==(Object other) =>

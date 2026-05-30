@@ -13,7 +13,9 @@ void main() {
     });
 
     test('jobWebsite is null when absent', () {
-      final links = MadeInCompanyLinks.fromJson({'website': 'https://example.com'});
+      final links = MadeInCompanyLinks.fromJson({
+        'website': 'https://example.com',
+      });
       expect(links.website, 'https://example.com');
       expect(links.jobWebsite, isNull);
     });
@@ -33,18 +35,36 @@ void main() {
       expect(a, isNot(equals(b)));
     });
 
-    test('two instances with same website but different jobWebsite are not equal', () {
-      const a = MadeInCompanyLinks(website: 'https://a.com', jobWebsite: 'https://jobs.a.com');
-      const b = MadeInCompanyLinks(website: 'https://a.com', jobWebsite: 'https://jobs.b.com');
-      expect(a, isNot(equals(b)));
-    });
+    test(
+      'two instances with same website but different jobWebsite are not equal',
+      () {
+        const a = MadeInCompanyLinks(
+          website: 'https://a.com',
+          jobWebsite: 'https://jobs.a.com',
+        );
+        const b = MadeInCompanyLinks(
+          website: 'https://a.com',
+          jobWebsite: 'https://jobs.b.com',
+        );
+        expect(a, isNot(equals(b)));
+      },
+    );
 
-    test('two fully populated instances with same fields are equal and have same hashCode', () {
-      const a = MadeInCompanyLinks(website: 'https://a.com', jobWebsite: 'https://jobs.a.com');
-      const b = MadeInCompanyLinks(website: 'https://a.com', jobWebsite: 'https://jobs.a.com');
-      expect(a, equals(b));
-      expect(a.hashCode, b.hashCode);
-    });
+    test(
+      'two fully populated instances with same fields are equal and have same hashCode',
+      () {
+        const a = MadeInCompanyLinks(
+          website: 'https://a.com',
+          jobWebsite: 'https://jobs.a.com',
+        );
+        const b = MadeInCompanyLinks(
+          website: 'https://a.com',
+          jobWebsite: 'https://jobs.a.com',
+        );
+        expect(a, equals(b));
+        expect(a.hashCode, b.hashCode);
+      },
+    );
 
     test('not equal to non-MadeInCompanyLinks object', () {
       const a = MadeInCompanyLinks(website: 'https://a.com');

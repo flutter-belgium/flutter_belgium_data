@@ -12,8 +12,9 @@ class MadeInDeveloperRef {
   factory MadeInDeveloperRef.fromJson(Map<String, dynamic> json) =>
       MadeInDeveloperRef(
         githubUserName: json['githubUserName'] as String,
-        localAvatarPath:
-            toLocalImagePath(json['profilePictureUrl'] as String? ?? ''),
+        localAvatarPath: toLocalImagePath(
+          json['profilePictureUrl'] as String? ?? '',
+        ),
       );
 
   @override

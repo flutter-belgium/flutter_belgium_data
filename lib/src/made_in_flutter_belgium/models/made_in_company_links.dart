@@ -1,8 +1,5 @@
 class MadeInCompanyLinks {
-  const MadeInCompanyLinks({
-    required this.website,
-    this.jobWebsite,
-  });
+  const MadeInCompanyLinks({required this.website, this.jobWebsite});
 
   final String website;
   final String? jobWebsite;
