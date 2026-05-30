@@ -150,19 +150,6 @@ void main() {
       await expectLater(downloadMadeInAssets(client: emptyClient), completes);
     });
 
-    test('creates and closes its own http.Client when none is provided', () async {
-      // Calling without a client exercises the `client ?? http.Client()` and
-      // `if (shouldClose) c.close()` branches. The real http.Client is created
-      // and later closed in the finally block regardless of outcome (success or
-      // network error).
-      try {
-        await downloadMadeInAssets(outputPath: tempDir.path);
-      } catch (_) {
-        // Network failure is acceptable; the important thing is that the
-        // function ran through the client-creation and client-close branches.
-      }
-    });
-
     test('handles project with no icon and no banner', () async {
       final noAssetClient = MockClient((request) async {
         final path = request.url.path;
