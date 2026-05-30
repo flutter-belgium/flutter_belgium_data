@@ -13,12 +13,13 @@ class FlutterBelgiumData {
     MadeInFlutterBelgiumRepository? madeInRepository,
     FlutterBelgiumRepository? flutterBelgiumRepository,
     AirTableConfig? airTableConfig,
-  })  : _madeInRepository =
-            madeInRepository ?? HttpMadeInFlutterBelgiumRepository(),
-        _flutterBelgiumRepository = flutterBelgiumRepository ??
-            (airTableConfig != null
-                ? AirtableFlutterBelgiumRepository(config: airTableConfig)
-                : null);
+  }) : _madeInRepository =
+           madeInRepository ?? HttpMadeInFlutterBelgiumRepository(),
+       _flutterBelgiumRepository =
+           flutterBelgiumRepository ??
+           (airTableConfig != null
+               ? AirtableFlutterBelgiumRepository(config: airTableConfig)
+               : null);
 
   final MadeInFlutterBelgiumRepository _madeInRepository;
   final FlutterBelgiumRepository? _flutterBelgiumRepository;

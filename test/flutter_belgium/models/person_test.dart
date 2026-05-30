@@ -10,14 +10,19 @@ void main() {
     avatarUrl: 'assets/flutter_belgium/people/avatars/recPERSON1.jpg',
     companies: [PersonCompany(name: 'impaktfull', isActive: true)],
     githubUsername: 'vanlooverenkoen',
-    socialLinks: PersonSocialLinks(githubUrl: 'https://github.com/vanlooverenkoen'),
+    socialLinks: PersonSocialLinks(
+      githubUrl: 'https://github.com/vanlooverenkoen',
+    ),
   );
 
   group('Person', () {
     test('stores all fields', () {
       expect(koen.id, 'recPERSON1');
       expect(koen.name, 'Koen Van Looveren');
-      expect(koen.avatarUrl, 'assets/flutter_belgium/people/avatars/recPERSON1.jpg');
+      expect(
+        koen.avatarUrl,
+        'assets/flutter_belgium/people/avatars/recPERSON1.jpg',
+      );
       expect(koen.githubUsername, 'vanlooverenkoen');
       expect(koen.socialLinks.githubUrl, 'https://github.com/vanlooverenkoen');
     });
@@ -55,9 +60,17 @@ void main() {
         id: 'recP1',
         name: 'Koen Van Looveren',
         avatarUrl: 'assets/flutter_belgium/people/avatars/recP1.jpg',
-        companies: [PersonCompany(name: 'impaktfull', jobTitle: 'Founder', isActive: true)],
+        companies: [
+          PersonCompany(
+            name: 'impaktfull',
+            jobTitle: 'Founder',
+            isActive: true,
+          ),
+        ],
         githubUsername: 'vanlooverenkoen',
-        socialLinks: PersonSocialLinks(githubUrl: 'https://github.com/vanlooverenkoen'),
+        socialLinks: PersonSocialLinks(
+          githubUrl: 'https://github.com/vanlooverenkoen',
+        ),
       );
       final json = original.toJson();
       final restored = Person.fromJson(json);
@@ -66,7 +79,10 @@ void main() {
       expect(restored.avatarUrl, original.avatarUrl);
       expect(restored.githubUsername, original.githubUsername);
       expect(restored.companies.first.name, original.companies.first.name);
-      expect(restored.companies.first.jobTitle, original.companies.first.jobTitle);
+      expect(
+        restored.companies.first.jobTitle,
+        original.companies.first.jobTitle,
+      );
       expect(restored.socialLinks.githubUrl, original.socialLinks.githubUrl);
     });
   });

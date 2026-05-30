@@ -10,7 +10,8 @@ void main() {
         'name': 'Koen Van Looveren',
         'description': 'Flutter developer.',
         'images': {
-          'profilePictureUrl': 'https://avatars.githubusercontent.com/vanlooverenkoen',
+          'profilePictureUrl':
+              'https://avatars.githubusercontent.com/vanlooverenkoen',
         },
         'links': {
           'linkedin': 'https://linkedin.com/in/vanlooverenkoen/',
@@ -20,15 +21,19 @@ void main() {
         'projects': [
           {
             'name': 'Gaia',
-            'appIconUrl': 'https://api.madein.flutterbelgium.be/projects/Gaia/images/app_icon.webp',
-          }
+            'appIconUrl':
+                'https://api.madein.flutterbelgium.be/projects/Gaia/images/app_icon.webp',
+          },
         ],
       };
       final dev = MadeInDeveloper.fromJson(json);
       expect(dev.githubUserName, 'vanlooverenkoen');
       expect(dev.name, 'Koen Van Looveren');
       expect(dev.description, 'Flutter developer.');
-      expect(dev.localAvatarPath, 'assets/made_in/developers/vanlooverenkoen/avatar.jpg');
+      expect(
+        dev.localAvatarPath,
+        'assets/made_in/developers/vanlooverenkoen/avatar.jpg',
+      );
       expect(dev.links!.linkedin, 'https://linkedin.com/in/vanlooverenkoen/');
       expect(dev.links!.personalWebsite, 'https://vanlooverenkoen.be');
       expect(dev.links!.freelanceWebsite, isNull);
@@ -40,7 +45,8 @@ void main() {
       final json = {
         'githubUserName': 'aaltrarjen',
         'images': {
-          'profilePictureUrl': 'https://avatars.githubusercontent.com/aaltrarjen',
+          'profilePictureUrl':
+              'https://avatars.githubusercontent.com/aaltrarjen',
         },
       };
       final dev = MadeInDeveloper.fromJson(json);
@@ -52,12 +58,14 @@ void main() {
   });
 
   group('MadeInDeveloper equality', () {
-    MadeInDeveloper makeDev({String githubUserName = 'dev', List<MadeInAppRef> projects = const []}) =>
-        MadeInDeveloper(
-          githubUserName: githubUserName,
-          localAvatarPath: 'path',
-          projects: projects,
-        );
+    MadeInDeveloper makeDev({
+      String githubUserName = 'dev',
+      List<MadeInAppRef> projects = const [],
+    }) => MadeInDeveloper(
+      githubUserName: githubUserName,
+      localAvatarPath: 'path',
+      projects: projects,
+    );
 
     test('two instances with same fields are equal', () {
       const app = MadeInAppRef(name: 'App', localIconPath: 'p');
@@ -65,13 +73,19 @@ void main() {
     });
 
     test('two instances with different githubUserName are not equal', () {
-      expect(makeDev(githubUserName: 'dev-a'), isNot(equals(makeDev(githubUserName: 'dev-b'))));
+      expect(
+        makeDev(githubUserName: 'dev-a'),
+        isNot(equals(makeDev(githubUserName: 'dev-b'))),
+      );
     });
 
     test('same length but different project contents are not equal', () {
       const appA = MadeInAppRef(name: 'App A', localIconPath: 'p');
       const appB = MadeInAppRef(name: 'App B', localIconPath: 'p');
-      expect(makeDev(projects: [appA]), isNot(equals(makeDev(projects: [appB]))));
+      expect(
+        makeDev(projects: [appA]),
+        isNot(equals(makeDev(projects: [appB]))),
+      );
     });
 
     test('hashCode is consistent for equal instances', () {

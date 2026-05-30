@@ -13,8 +13,9 @@ void main() {
         'developers': [
           {
             'githubUserName': 'tijlivens',
-            'profilePictureUrl': 'https://avatars.githubusercontent.com/tijlivens',
-          }
+            'profilePictureUrl':
+                'https://avatars.githubusercontent.com/tijlivens',
+          },
         ],
         'links': {
           'appstore': 'https://apps.apple.com/be/app/bevoy/id6443584006',
@@ -27,16 +28,21 @@ void main() {
         },
         'sunsetReason': null,
         'images': {
-          'appIconUrl': 'https://api.madein.flutterbelgium.be/projects/Bevoy/images/app_icon.webp',
-          'screenshotUrls': ['https://api.madein.flutterbelgium.be/projects/Bevoy/images/screenshot_1.webp'],
-          'bannerUrl': 'https://api.madein.flutterbelgium.be/projects/Bevoy/images/banner.webp',
+          'appIconUrl':
+              'https://api.madein.flutterbelgium.be/projects/Bevoy/images/app_icon.webp',
+          'screenshotUrls': [
+            'https://api.madein.flutterbelgium.be/projects/Bevoy/images/screenshot_1.webp',
+          ],
+          'bannerUrl':
+              'https://api.madein.flutterbelgium.be/projects/Bevoy/images/banner.webp',
         },
         'involvedCompanies': [
           {
             'name': 'Lemon',
-            'logoUrl': 'https://api.madein.flutterbelgium.be/companies/Lemon/images/logo.webp',
+            'logoUrl':
+                'https://api.madein.flutterbelgium.be/companies/Lemon/images/logo.webp',
             'useLogoInsteadOfTextTitle': true,
-          }
+          },
         ],
       };
       final app = MadeInApp.fromJson(json);
@@ -47,15 +53,26 @@ void main() {
       expect(app.sunsetReason, isNull);
       expect(app.localIconPath, 'assets/made_in/projects/Bevoy/app_icon.webp');
       expect(app.localBannerPath, 'assets/made_in/projects/Bevoy/banner.webp');
-      expect(app.screenshotPaths, ['assets/made_in/projects/Bevoy/screenshot_1.webp']);
-      expect(app.links.appstore, 'https://apps.apple.com/be/app/bevoy/id6443584006');
+      expect(app.screenshotPaths, [
+        'assets/made_in/projects/Bevoy/screenshot_1.webp',
+      ]);
+      expect(
+        app.links.appstore,
+        'https://apps.apple.com/be/app/bevoy/id6443584006',
+      );
       expect(app.links.playstore, isNull);
       expect(app.developers, hasLength(1));
       expect(app.developers.first.githubUserName, 'tijlivens');
-      expect(app.developers.first.localAvatarPath, 'assets/made_in/developers/tijlivens/avatar.jpg');
+      expect(
+        app.developers.first.localAvatarPath,
+        'assets/made_in/developers/tijlivens/avatar.jpg',
+      );
       expect(app.involvedCompanies, hasLength(1));
       expect(app.involvedCompanies.first.name, 'Lemon');
-      expect(app.involvedCompanies.first.localLogoPath, 'assets/made_in/companies/Lemon/logo.webp');
+      expect(
+        app.involvedCompanies.first.localLogoPath,
+        'assets/made_in/companies/Lemon/logo.webp',
+      );
     });
 
     test('parses sunsetted app with sunsetReason and publisherCompany', () {
@@ -67,11 +84,13 @@ void main() {
         'sunsetReason': 'No longer maintained.',
         'links': {},
         'images': {
-          'appIconUrl': 'https://api.madein.flutterbelgium.be/projects/OldApp/images/app_icon.webp',
+          'appIconUrl':
+              'https://api.madein.flutterbelgium.be/projects/OldApp/images/app_icon.webp',
         },
         'publisherCompany': {
           'name': 'Acme',
-          'logoUrl': 'https://api.madein.flutterbelgium.be/companies/Acme/images/logo.svg',
+          'logoUrl':
+              'https://api.madein.flutterbelgium.be/companies/Acme/images/logo.svg',
           'useLogoInsteadOfTextTitle': false,
         },
       };
@@ -90,7 +109,8 @@ void main() {
         'isSunsetted': false,
         'links': {},
         'images': {
-          'appIconUrl': 'https://api.madein.flutterbelgium.be/projects/Solo App/images/app_icon.webp',
+          'appIconUrl':
+              'https://api.madein.flutterbelgium.be/projects/Solo App/images/app_icon.webp',
         },
       };
       final app = MadeInApp.fromJson(json);
@@ -103,18 +123,20 @@ void main() {
   });
 
   group('MadeInApp equality', () {
-    MadeInApp makeApp({String name = 'App', List<String> screenshots = const []}) =>
-        MadeInApp(
-          name: name,
-          localIconPath: 'path',
-          description: 'desc',
-          releaseDate: DateTime(2023),
-          isSunsetted: false,
-          links: const MadeInAppLinks(),
-          screenshotPaths: screenshots,
-          developers: const [],
-          involvedCompanies: const [],
-        );
+    MadeInApp makeApp({
+      String name = 'App',
+      List<String> screenshots = const [],
+    }) => MadeInApp(
+      name: name,
+      localIconPath: 'path',
+      description: 'desc',
+      releaseDate: DateTime(2023),
+      isSunsetted: false,
+      links: const MadeInAppLinks(),
+      screenshotPaths: screenshots,
+      developers: const [],
+      involvedCompanies: const [],
+    );
 
     test('two instances with same fields are equal', () {
       final a = makeApp(screenshots: ['s1', 's2']);
@@ -128,7 +150,10 @@ void main() {
     });
 
     test('same length but different screenshot contents are not equal', () {
-      expect(makeApp(screenshots: ['s1']), isNot(equals(makeApp(screenshots: ['s2']))));
+      expect(
+        makeApp(screenshots: ['s1']),
+        isNot(equals(makeApp(screenshots: ['s2']))),
+      );
     });
   });
 }

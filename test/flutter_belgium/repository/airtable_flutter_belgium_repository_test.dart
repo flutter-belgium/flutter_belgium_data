@@ -144,41 +144,60 @@ const _config = AirTableConfig(
 );
 
 MockClient _mockClient() => MockClient((request) async {
-      final tableId = request.url.path.split('/').last;
-      String body;
-      if (tableId == 'tblCOMPANIES') {
-        body = _companyRecords;
-      } else if (tableId == 'tblPEOPLE') {
-        body = _peopleRecords;
-      } else if (tableId == 'tblTALKS') {
-        body = _talkRecords;
-      } else if (tableId == 'tblMEETUPS') {
-        body = _meetupRecords;
-      } else {
-        body = '{"records":[]}';
-      }
-      return http.Response(body, 200, headers: {'content-type': 'application/json'});
-    });
+  final tableId = request.url.path.split('/').last;
+  String body;
+  if (tableId == 'tblCOMPANIES') {
+    body = _companyRecords;
+  } else if (tableId == 'tblPEOPLE') {
+    body = _peopleRecords;
+  } else if (tableId == 'tblTALKS') {
+    body = _talkRecords;
+  } else if (tableId == 'tblMEETUPS') {
+    body = _meetupRecords;
+  } else {
+    body = '{"records":[]}';
+  }
+  return http.Response(
+    body,
+    200,
+    headers: {'content-type': 'application/json'},
+  );
+});
 
 void main() {
   group('AirtableFlutterBelgiumRepository - companies', () {
-    test('getHostingCompanies returns companies with logo and website', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
-      final companies = await repo.getHostingCompanies();
-      expect(companies.length, 1);
-      expect(companies.first.name, 'ACA Group');
-      expect(companies.first.logoUrl, 'assets/flutter_belgium/companies/logos/recCOMPANY1.png');
-      expect(companies.first.websiteUrl, 'https://www.acagroup.be');
-    });
+    test(
+      'getHostingCompanies returns companies with logo and website',
+      () async {
+        final repo = AirtableFlutterBelgiumRepository(
+          config: _config,
+          client: _mockClient(),
+        );
+        final companies = await repo.getHostingCompanies();
+        expect(companies.length, 1);
+        expect(companies.first.name, 'ACA Group');
+        expect(
+          companies.first.logoUrl,
+          'assets/flutter_belgium/companies/logos/recCOMPANY1.png',
+        );
+        expect(companies.first.websiteUrl, 'https://www.acagroup.be');
+      },
+    );
 
     test('skips company without Logo attachment', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final companies = await repo.getHostingCompanies();
       expect(companies.any((c) => c.name == 'No Logo Co'), isFalse);
     });
 
     test('skips company without Website URL', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final companies = await repo.getHostingCompanies();
       expect(companies.any((c) => c.name == 'No Website Co'), isFalse);
     });
@@ -186,27 +205,42 @@ void main() {
 
   group('AirtableFlutterBelgiumRepository - persons', () {
     test('getPersons returns persons with photo', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final persons = await repo.getPersons();
       expect(persons.length, 1);
       expect(persons.first.name, 'Koen Van Looveren');
-      expect(persons.first.avatarUrl, 'assets/flutter_belgium/people/avatars/recPERSON1.jpg');
+      expect(
+        persons.first.avatarUrl,
+        'assets/flutter_belgium/people/avatars/recPERSON1.jpg',
+      );
     });
 
     test('skips person without Photo attachment', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final persons = await repo.getPersons();
       expect(persons.any((p) => p.name == 'No Photo Person'), isFalse);
     });
 
     test('person has company resolved from company map', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final persons = await repo.getPersons();
       expect(persons.first.companies.first.name, 'ACA Group');
     });
 
     test('person socialLinks are all null', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final persons = await repo.getPersons();
       final links = persons.first.socialLinks;
       expect(links.githubUrl, isNull);
@@ -218,51 +252,81 @@ void main() {
 
   group('AirtableFlutterBelgiumRepository - meetups', () {
     test('getMeetupBySlug returns correct meetup', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final meetup = await repo.getMeetupBySlug('flutter-belgium-26');
       expect(meetup, isNotNull);
       expect(meetup!.title, 'Flutter Belgium #26');
       expect(meetup.hostCompany, 'ACA Group');
       expect(meetup.location, 'Dublinstraat 31/010 9000 Ghent');
       expect(meetup.description, 'A great meetup in Ghent.');
-      expect(meetup.thumbnailUrl, 'assets/flutter_belgium/meetups/posters/recMEETUP1.jpg');
-      expect(meetup.meetupUrl, 'https://www.meetup.com/flutter-belgium/events/312351623');
+      expect(
+        meetup.thumbnailUrl,
+        'assets/flutter_belgium/meetups/posters/recMEETUP1.jpg',
+      );
+      expect(
+        meetup.meetupUrl,
+        'https://www.meetup.com/flutter-belgium/events/312351623',
+      );
     });
 
     test('getMeetupBySlug returns null for unknown slug', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       expect(await repo.getMeetupBySlug('does-not-exist'), isNull);
     });
 
     test('skips meetup without Date', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final meetup = await repo.getMeetupBySlug('meetup-no-date');
       expect(meetup, isNull);
     });
 
     test('skips meetup without Location', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final meetup = await repo.getMeetupBySlug('meetup-no-location');
       expect(meetup, isNull);
     });
 
     test('getPastMeetups returns past meetups sorted newest first', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final past = await repo.getPastMeetups();
       // recMEETUP1 (2026-02-03) is in the past; future meetup (2099) is not
       expect(past.any((m) => m.title == 'Flutter Belgium #26'), isTrue);
       expect(past.any((m) => m.title == 'Flutter Belgium #99'), isFalse);
     });
 
-    test('getUpcomingMeetups returns future meetups sorted soonest first', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
-      final upcoming = await repo.getUpcomingMeetups();
-      expect(upcoming.any((m) => m.title == 'Flutter Belgium #99'), isTrue);
-      expect(upcoming.any((m) => m.title == 'Flutter Belgium #26'), isFalse);
-    });
+    test(
+      'getUpcomingMeetups returns future meetups sorted soonest first',
+      () async {
+        final repo = AirtableFlutterBelgiumRepository(
+          config: _config,
+          client: _mockClient(),
+        );
+        final upcoming = await repo.getUpcomingMeetups();
+        expect(upcoming.any((m) => m.title == 'Flutter Belgium #99'), isTrue);
+        expect(upcoming.any((m) => m.title == 'Flutter Belgium #26'), isFalse);
+      },
+    );
 
     test('getNextMeetup returns the soonest upcoming meetup', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final next = await repo.getNextMeetup();
       expect(next, isNotNull);
       expect(next!.title, 'Flutter Belgium #99');
@@ -271,7 +335,10 @@ void main() {
 
   group('AirtableFlutterBelgiumRepository - talks', () {
     test('getAllTalks returns talk with resolved speaker', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final talks = await repo.getAllTalks();
       expect(talks.length, 1);
       expect(talks.first.title, 'Building performant Flutter apps');
@@ -281,32 +348,49 @@ void main() {
 
   group('AirtableFlutterBelgiumRepository - hardcoded data', () {
     test('getSponsors returns two sponsors', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final sponsors = await repo.getSponsors();
       expect(sponsors.length, 2);
       expect(sponsors.first.name, 'impaktfull');
     });
 
     test('getTeamMembers returns three members', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final members = await repo.getTeamMembers();
       expect(members.length, 3);
-      expect(members.map((m) => m.name),
-          containsAll(['Koen Van Looveren', 'Jens Gyselinck', 'Kris Pypen']));
+      expect(
+        members.map((m) => m.name),
+        containsAll(['Koen Van Looveren', 'Jens Gyselinck', 'Kris Pypen']),
+      );
     });
 
     test('getTestimonials returns three testimonials with authors', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final testimonials = await repo.getTestimonials();
       expect(testimonials.length, 3);
       expect(testimonials.first.author.name, 'Koen Van Looveren');
     });
 
     test('getCommunityLinks returns correct slack url', () async {
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: _mockClient());
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: _mockClient(),
+      );
       final links = await repo.getCommunityLinks();
       expect(links.slackInviteUrl, contains('flutter-belgium'));
-      expect(links.youtubeChannelUrl, 'https://www.youtube.com/@flutter-belgium');
+      expect(
+        links.youtubeChannelUrl,
+        'https://www.youtube.com/@flutter-belgium',
+      );
     });
   });
 
@@ -328,9 +412,16 @@ void main() {
         } else {
           body = '{"records":[]}';
         }
-        return http.Response(body, 200, headers: {'content-type': 'application/json'});
+        return http.Response(
+          body,
+          200,
+          headers: {'content-type': 'application/json'},
+        );
       });
-      final repo = AirtableFlutterBelgiumRepository(config: _config, client: client);
+      final repo = AirtableFlutterBelgiumRepository(
+        config: _config,
+        client: client,
+      );
       await repo.getPersons();
       final firstCallCount = callCount;
       await repo.getPersons();

@@ -68,33 +68,47 @@ const _meetupRecords = '''
 ''';
 
 MockClient _mockClient() => MockClient((request) async {
-      final url = request.url.toString();
-      if (url.contains('tblCOMPANIES')) {
-        return http.Response(_companyRecords, 200,
-            headers: {'content-type': 'application/json'});
-      }
-      if (url.contains('tblPEOPLE')) {
-        return http.Response(_peopleRecords, 200,
-            headers: {'content-type': 'application/json'});
-      }
-      if (url.contains('tblTALKS')) {
-        return http.Response('{"records":[]}', 200,
-            headers: {'content-type': 'application/json'});
-      }
-      if (url.contains('tblMEETUPS')) {
-        return http.Response(_meetupRecords, 200,
-            headers: {'content-type': 'application/json'});
-      }
-      // Image download calls
-      return http.Response('fake-image-bytes', 200);
-    });
+  final url = request.url.toString();
+  if (url.contains('tblCOMPANIES')) {
+    return http.Response(
+      _companyRecords,
+      200,
+      headers: {'content-type': 'application/json'},
+    );
+  }
+  if (url.contains('tblPEOPLE')) {
+    return http.Response(
+      _peopleRecords,
+      200,
+      headers: {'content-type': 'application/json'},
+    );
+  }
+  if (url.contains('tblTALKS')) {
+    return http.Response(
+      '{"records":[]}',
+      200,
+      headers: {'content-type': 'application/json'},
+    );
+  }
+  if (url.contains('tblMEETUPS')) {
+    return http.Response(
+      _meetupRecords,
+      200,
+      headers: {'content-type': 'application/json'},
+    );
+  }
+  // Image download calls
+  return http.Response('fake-image-bytes', 200);
+});
 
 void main() {
   group('FlutterBelgiumDownloader', () {
     late Directory tempDir;
 
     setUp(() async {
-      tempDir = await Directory.systemTemp.createTemp('flutter_belgium_dl_test');
+      tempDir = await Directory.systemTemp.createTemp(
+        'flutter_belgium_dl_test',
+      );
     });
 
     tearDown(() async {
@@ -108,7 +122,8 @@ void main() {
         client: _mockClient(),
       );
       final logoFile = File(
-          '${tempDir.path}/assets/flutter_belgium/companies/logos/recCOMPANY1.png');
+        '${tempDir.path}/assets/flutter_belgium/companies/logos/recCOMPANY1.png',
+      );
       expect(await logoFile.exists(), isTrue);
     });
 
@@ -119,7 +134,8 @@ void main() {
         client: _mockClient(),
       );
       final avatarFile = File(
-          '${tempDir.path}/assets/flutter_belgium/people/avatars/recPERSON1.jpg');
+        '${tempDir.path}/assets/flutter_belgium/people/avatars/recPERSON1.jpg',
+      );
       expect(await avatarFile.exists(), isTrue);
     });
 
@@ -130,7 +146,8 @@ void main() {
         client: _mockClient(),
       );
       final posterFile = File(
-          '${tempDir.path}/assets/flutter_belgium/meetups/posters/recMEETUP1.jpg');
+        '${tempDir.path}/assets/flutter_belgium/meetups/posters/recMEETUP1.jpg',
+      );
       expect(await posterFile.exists(), isTrue);
     });
 
@@ -138,12 +155,16 @@ void main() {
       final clientNoLogo = MockClient((request) async {
         if (request.url.toString().contains('tblCOMPANIES')) {
           return http.Response(
-              '{"records":[{"id":"recC2","createdTime":"2023-01-01T00:00:00.000Z","fields":{"Name":"NoLogo","Address":"X","Website URL":"https://x.be"}}]}',
-              200,
-              headers: {'content-type': 'application/json'});
+            '{"records":[{"id":"recC2","createdTime":"2023-01-01T00:00:00.000Z","fields":{"Name":"NoLogo","Address":"X","Website URL":"https://x.be"}}]}',
+            200,
+            headers: {'content-type': 'application/json'},
+          );
         }
-        return http.Response('{"records":[]}', 200,
-            headers: {'content-type': 'application/json'});
+        return http.Response(
+          '{"records":[]}',
+          200,
+          headers: {'content-type': 'application/json'},
+        );
       });
       await expectLater(
         FlutterBelgiumDownloader.downloadFlutterBelgiumAssets(

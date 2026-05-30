@@ -74,14 +74,14 @@ class MadeInCompany {
 
   @override
   int get hashCode => Object.hash(
-        name,
-        localLogoPath,
-        useLogoInsteadOfTextTitle,
-        isAgency,
-        description,
-        links,
-        Object.hashAll(developers),
-        Object.hashAll(projects),
-        Object.hashAll(involvedProjects),
-      );
+    name,
+    localLogoPath,
+    useLogoInsteadOfTextTitle,
+    isAgency,
+    description,
+    links,
+    Object.hashAll(developers),
+    Object.hashAll(projects),
+    Object.hashAll(involvedProjects),
+  );
 }

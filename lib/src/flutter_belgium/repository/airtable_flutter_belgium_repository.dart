@@ -24,8 +24,8 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
   AirtableFlutterBelgiumRepository({
     required AirTableConfig config,
     http.Client? client,
-  })  : _config = config,
-        _client = client ?? http.Client();
+  }) : _config = config,
+       _client = client ?? http.Client();
 
   final AirTableConfig _config;
   final http.Client _client;
@@ -58,7 +58,8 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
   }
 
   Future<Map<String, Person>> _fetchPersons(
-      Map<String, _Location> locations) async {
+    Map<String, _Location> locations,
+  ) async {
     final records = await _fetchAll(_config.tablePeople);
     final map = <String, Person>{};
     for (final record in records) {
@@ -83,7 +84,8 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     return map;
   }
 
-  Future<void> _loadData() => _loadFuture ??= _doLoad().catchError((Object e, StackTrace st) {
+  Future<void> _loadData() =>
+      _loadFuture ??= _doLoad().catchError((Object e, StackTrace st) {
         _loadFuture = null; // allow retry on transient failures
         Error.throwWithStackTrace(e, st);
       });
@@ -122,25 +124,31 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
             .toList();
         if (speakers.isEmpty) continue;
         final talk = Talk(
-            id: talkId, title: tf.name!, date: date, speakers: speakers);
+          id: talkId,
+          title: tf.name!,
+          date: date,
+          speakers: speakers,
+        );
         meetupTalks.add(talk);
         allTalks.add(talk);
         seenTalkIds.add(talkId);
       }
 
-      allMeetups.add(Meetup(
-        id: record.id,
-        title: f.name!,
-        date: date,
-        hostCompany: location.company.name,
-        location: location.address,
-        talks: meetupTalks,
-        description: f.description,
-        thumbnailUrl: f.poster.isNotEmpty
-            ? toLocalMeetupPosterPath(record.id, f.poster.first.filename)
-            : null,
-        meetupUrl: f.meetupUrl,
-      ));
+      allMeetups.add(
+        Meetup(
+          id: record.id,
+          title: f.name!,
+          date: date,
+          hostCompany: location.company.name,
+          location: location.address,
+          talks: meetupTalks,
+          description: f.description,
+          thumbnailUrl: f.poster.isNotEmpty
+              ? toLocalMeetupPosterPath(record.id, f.poster.first.filename)
+              : null,
+          meetupUrl: f.meetupUrl,
+        ),
+      );
     }
 
     _meetups = allMeetups;
@@ -209,7 +217,10 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     name: 'Koen Van Looveren',
     avatarUrl: '/assets/team/koen.jpeg',
     companies: [
-      PersonCompany(name: 'impaktfull', jobTitle: 'Founder & Flutter Developer'),
+      PersonCompany(
+        name: 'impaktfull',
+        jobTitle: 'Founder & Flutter Developer',
+      ),
     ],
     githubUsername: 'vanlooverenkoen',
     socialLinks: PersonSocialLinks(
@@ -223,7 +234,10 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     name: 'Jens Gyselinck',
     avatarUrl: '/assets/team/jens.jpeg',
     companies: [
-      PersonCompany(name: 'diskwriter', jobTitle: 'Founder & Flutter Developer'),
+      PersonCompany(
+        name: 'diskwriter',
+        jobTitle: 'Founder & Flutter Developer',
+      ),
     ],
     githubUsername: 'diskwriter',
     socialLinks: PersonSocialLinks(
@@ -236,9 +250,7 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
     id: 'person-kris',
     name: 'Kris Pypen',
     avatarUrl: '/assets/team/kris.jpeg',
-    companies: [
-      PersonCompany(name: 'Flutter Belgium', jobTitle: 'Organiser'),
-    ],
+    companies: [PersonCompany(name: 'Flutter Belgium', jobTitle: 'Organiser')],
     githubUsername: 'krispypen',
     socialLinks: PersonSocialLinks(
       githubUrl: 'https://github.com/krispypen',
@@ -248,72 +260,72 @@ class AirtableFlutterBelgiumRepository implements FlutterBelgiumRepository {
 
   @override
   Future<List<Sponsor>> getSponsors() async => const [
-        Sponsor(
-          name: 'impaktfull',
-          logoUrl: '/assets/company/impaktfull.svg',
-          websiteUrl: 'https://impaktfull.com',
-        ),
-        Sponsor(
-          name: 'diskwriter',
-          logoUrl: '/assets/company/diskwriter.svg',
-          websiteUrl: 'https://diskwriter.be',
-        ),
-      ];
+    Sponsor(
+      name: 'impaktfull',
+      logoUrl: '/assets/company/impaktfull.svg',
+      websiteUrl: 'https://impaktfull.com',
+    ),
+    Sponsor(
+      name: 'diskwriter',
+      logoUrl: '/assets/company/diskwriter.svg',
+      websiteUrl: 'https://diskwriter.be',
+    ),
+  ];
 
   @override
   Future<List<TeamMember>> getTeamMembers() async => const [
-        TeamMember(
-          name: 'Koen Van Looveren',
-          role: 'Organiser',
-          avatarUrl: '/assets/team/koen.jpeg',
-          githubUrl: 'https://github.com/vanlooverenkoen',
-          linkedinUrl: 'https://www.linkedin.com/in/koenvanlooveren/',
-        ),
-        TeamMember(
-          name: 'Jens Gyselinck',
-          role: 'Organiser',
-          avatarUrl: '/assets/team/jens.jpeg',
-          linkedinUrl: 'https://www.linkedin.com/in/jensgyselinck/',
-          githubUrl: 'https://github.com/diskwriter',
-        ),
-        TeamMember(
-          name: 'Kris Pypen',
-          role: 'Organiser',
-          avatarUrl: '/assets/team/kris.jpeg',
-          linkedinUrl: 'https://www.linkedin.com/in/krispypen/',
-          githubUrl: 'https://github.com/krispypen',
-        ),
-      ];
+    TeamMember(
+      name: 'Koen Van Looveren',
+      role: 'Organiser',
+      avatarUrl: '/assets/team/koen.jpeg',
+      githubUrl: 'https://github.com/vanlooverenkoen',
+      linkedinUrl: 'https://www.linkedin.com/in/koenvanlooveren/',
+    ),
+    TeamMember(
+      name: 'Jens Gyselinck',
+      role: 'Organiser',
+      avatarUrl: '/assets/team/jens.jpeg',
+      linkedinUrl: 'https://www.linkedin.com/in/jensgyselinck/',
+      githubUrl: 'https://github.com/diskwriter',
+    ),
+    TeamMember(
+      name: 'Kris Pypen',
+      role: 'Organiser',
+      avatarUrl: '/assets/team/kris.jpeg',
+      linkedinUrl: 'https://www.linkedin.com/in/krispypen/',
+      githubUrl: 'https://github.com/krispypen',
+    ),
+  ];
 
   @override
   Future<List<Testimonial>> getTestimonials() async => const [
-        Testimonial(
-          text:
-              'Building Flutter Belgium has been one of the most rewarding things I have done as a developer. Seeing the community grow and watching people connect over a shared passion for Flutter makes every event worth it.',
-          author: _koen,
-        ),
-        Testimonial(
-          text:
-              'I joined as an organiser because I wanted to give back to the community that helped me grow as an engineer. Flutter Belgium is the place where Belgian Flutter developers come to learn and inspire each other.',
-          author: _jens,
-        ),
-        Testimonial(
-          text:
-              'What started as a small idea has grown into a thriving community of Flutter developers across Belgium. The conversations and connections that happen at every meetup continue to surprise and motivate me.',
-          author: _kris,
-        ),
-      ];
+    Testimonial(
+      text:
+          'Building Flutter Belgium has been one of the most rewarding things I have done as a developer. Seeing the community grow and watching people connect over a shared passion for Flutter makes every event worth it.',
+      author: _koen,
+    ),
+    Testimonial(
+      text:
+          'I joined as an organiser because I wanted to give back to the community that helped me grow as an engineer. Flutter Belgium is the place where Belgian Flutter developers come to learn and inspire each other.',
+      author: _jens,
+    ),
+    Testimonial(
+      text:
+          'What started as a small idea has grown into a thriving community of Flutter developers across Belgium. The conversations and connections that happen at every meetup continue to surprise and motivate me.',
+      author: _kris,
+    ),
+  ];
 
   @override
   Future<CommunityLinks> getCommunityLinks() async => const CommunityLinks(
-        slackInviteUrl:
-            'https://join.slack.com/t/flutter-belgium/shared_invite/zt-2w7m73ron-5NZWiebmvxXAzBairbAisw',
-        youtubeChannelUrl: 'https://www.youtube.com/@flutter-belgium',
-        meetupUrl: 'https://www.meetup.com/flutter-belgium/',
-        linkedinUrl: 'https://www.linkedin.com/company/flutter-belgium/',
-        githubUrl: 'https://github.com/flutter-belgium',
-        madeInUrl: '/made-in-flutter-belgium/apps',
-      );
+    slackInviteUrl:
+        'https://join.slack.com/t/flutter-belgium/shared_invite/zt-2w7m73ron-5NZWiebmvxXAzBairbAisw',
+    youtubeChannelUrl: 'https://www.youtube.com/@flutter-belgium',
+    meetupUrl: 'https://www.meetup.com/flutter-belgium/',
+    linkedinUrl: 'https://www.linkedin.com/company/flutter-belgium/',
+    githubUrl: 'https://github.com/flutter-belgium',
+    madeInUrl: '/made-in-flutter-belgium/apps',
+  );
 }
 
 class _Location {

@@ -53,7 +53,8 @@ class MadeInApp {
       description: json['description'] as String? ?? '',
       publisherCompany: json['publisherCompany'] != null
           ? MadeInCompanyRef.fromJson(
-              (json['publisherCompany'] as Map).cast<String, dynamic>())
+              (json['publisherCompany'] as Map).cast<String, dynamic>(),
+            )
           : null,
       releaseDate: DateTime.parse(json['releaseData'] as String),
       isSunsetted: json['isSunsetted'] as bool? ?? false,
@@ -89,17 +90,17 @@ class MadeInApp {
 
   @override
   int get hashCode => Object.hash(
-        name,
-        localIconPath,
-        description,
-        publisherCompany,
-        releaseDate,
-        isSunsetted,
-        sunsetReason,
-        links,
-        localBannerPath,
-        Object.hashAll(screenshotPaths),
-        Object.hashAll(developers),
-        Object.hashAll(involvedCompanies),
-      );
+    name,
+    localIconPath,
+    description,
+    publisherCompany,
+    releaseDate,
+    isSunsetted,
+    sunsetReason,
+    links,
+    localBannerPath,
+    Object.hashAll(screenshotPaths),
+    Object.hashAll(developers),
+    Object.hashAll(involvedCompanies),
+  );
 }

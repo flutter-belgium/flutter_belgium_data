@@ -16,20 +16,20 @@ class CommunityLinks {
   final String madeInUrl;
 
   factory CommunityLinks.fromJson(Map<String, dynamic> json) => CommunityLinks(
-        slackInviteUrl: json['slackInviteUrl'] as String,
-        youtubeChannelUrl: json['youtubeChannelUrl'] as String,
-        meetupUrl: json['meetupUrl'] as String,
-        linkedinUrl: json['linkedinUrl'] as String,
-        githubUrl: json['githubUrl'] as String,
-        madeInUrl: json['madeInUrl'] as String,
-      );
+    slackInviteUrl: json['slackInviteUrl'] as String,
+    youtubeChannelUrl: json['youtubeChannelUrl'] as String,
+    meetupUrl: json['meetupUrl'] as String,
+    linkedinUrl: json['linkedinUrl'] as String,
+    githubUrl: json['githubUrl'] as String,
+    madeInUrl: json['madeInUrl'] as String,
+  );
 
   Map<String, dynamic> toJson() => {
-        'slackInviteUrl': slackInviteUrl,
-        'youtubeChannelUrl': youtubeChannelUrl,
-        'meetupUrl': meetupUrl,
-        'linkedinUrl': linkedinUrl,
-        'githubUrl': githubUrl,
-        'madeInUrl': madeInUrl,
-      };
+    'slackInviteUrl': slackInviteUrl,
+    'youtubeChannelUrl': youtubeChannelUrl,
+    'meetupUrl': meetupUrl,
+    'linkedinUrl': linkedinUrl,
+    'githubUrl': githubUrl,
+    'madeInUrl': madeInUrl,
+  };
 }

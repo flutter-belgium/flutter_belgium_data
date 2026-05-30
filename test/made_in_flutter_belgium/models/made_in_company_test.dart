@@ -18,11 +18,13 @@ void main() {
         'involvedProjects': [
           {
             'name': 'Gaia',
-            'appIconUrl': 'https://api.madein.flutterbelgium.be/projects/Gaia/images/app_icon.webp',
-          }
+            'appIconUrl':
+                'https://api.madein.flutterbelgium.be/projects/Gaia/images/app_icon.webp',
+          },
         ],
         'images': {
-          'logoUrl': 'https://api.madein.flutterbelgium.be/companies/icapps/images/logo.svg',
+          'logoUrl':
+              'https://api.madein.flutterbelgium.be/companies/icapps/images/logo.svg',
         },
         'isAgency': true,
       };
@@ -37,7 +39,10 @@ void main() {
       expect(company.developers, isEmpty);
       expect(company.involvedProjects, hasLength(1));
       expect(company.involvedProjects.first.name, 'Gaia');
-      expect(company.involvedProjects.first.localIconPath, 'assets/made_in/projects/Gaia/app_icon.webp');
+      expect(
+        company.involvedProjects.first.localIconPath,
+        'assets/made_in/projects/Gaia/app_icon.webp',
+      );
     });
 
     test('handles null/absent optional fields', () {
@@ -57,19 +62,24 @@ void main() {
   });
 
   group('MadeInCompany equality', () {
-    MadeInCompany makeCo({String name = 'Co', List<MadeInDeveloperRef> developers = const []}) =>
-        MadeInCompany(
-          name: name,
-          localLogoPath: 'path',
-          useLogoInsteadOfTextTitle: false,
-          isAgency: false,
-          developers: developers,
-          projects: const [],
-          involvedProjects: const [],
-        );
+    MadeInCompany makeCo({
+      String name = 'Co',
+      List<MadeInDeveloperRef> developers = const [],
+    }) => MadeInCompany(
+      name: name,
+      localLogoPath: 'path',
+      useLogoInsteadOfTextTitle: false,
+      isAgency: false,
+      developers: developers,
+      projects: const [],
+      involvedProjects: const [],
+    );
 
     test('two instances with same fields are equal', () {
-      const dev = MadeInDeveloperRef(githubUserName: 'dev', localAvatarPath: 'p');
+      const dev = MadeInDeveloperRef(
+        githubUserName: 'dev',
+        localAvatarPath: 'p',
+      );
       expect(makeCo(developers: [dev]), equals(makeCo(developers: [dev])));
     });
 
@@ -78,13 +88,25 @@ void main() {
     });
 
     test('same length but different developer contents are not equal', () {
-      const devA = MadeInDeveloperRef(githubUserName: 'a', localAvatarPath: 'p');
-      const devB = MadeInDeveloperRef(githubUserName: 'b', localAvatarPath: 'p');
-      expect(makeCo(developers: [devA]), isNot(equals(makeCo(developers: [devB]))));
+      const devA = MadeInDeveloperRef(
+        githubUserName: 'a',
+        localAvatarPath: 'p',
+      );
+      const devB = MadeInDeveloperRef(
+        githubUserName: 'b',
+        localAvatarPath: 'p',
+      );
+      expect(
+        makeCo(developers: [devA]),
+        isNot(equals(makeCo(developers: [devB]))),
+      );
     });
 
     test('hashCode is consistent for equal instances', () {
-      const dev = MadeInDeveloperRef(githubUserName: 'dev', localAvatarPath: 'p');
+      const dev = MadeInDeveloperRef(
+        githubUserName: 'dev',
+        localAvatarPath: 'p',
+      );
       final a = makeCo(developers: [dev]);
       final b = makeCo(developers: [dev]);
       expect(a.hashCode, b.hashCode);

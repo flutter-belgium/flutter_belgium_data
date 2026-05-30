@@ -17,11 +17,13 @@ Future<List<AirtableRecord>> fetchAllAirtableRecords(
   do {
     final params = <String, String>{};
     if (offset != null) params['offset'] = offset;
-    final uri = Uri.parse('$_baseUrl/v0/${config.base}/$tableId')
-        .replace(queryParameters: params.isEmpty ? null : params);
-    final response = await client.get(uri, headers: {
-      'Authorization': 'Bearer ${config.personalAccessToken}',
-    });
+    final uri = Uri.parse(
+      '$_baseUrl/v0/${config.base}/$tableId',
+    ).replace(queryParameters: params.isEmpty ? null : params);
+    final response = await client.get(
+      uri,
+      headers: {'Authorization': 'Bearer ${config.personalAccessToken}'},
+    );
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw HttpException(
         'AirTable HTTP ${response.statusCode} for $tableId',

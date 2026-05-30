@@ -10,7 +10,13 @@ void main() {
         'Location': ['recCOMPANY1'],
         'Talks': ['recTALK1'],
         'Description': 'A great meetup.',
-        'Poster': [{'id': 'attP1', 'url': 'https://example.com/poster.jpg', 'filename': 'poster.jpg'}],
+        'Poster': [
+          {
+            'id': 'attP1',
+            'url': 'https://example.com/poster.jpg',
+            'filename': 'poster.jpg',
+          },
+        ],
         'Meetup URL': 'https://meetup.com/events/1',
       });
       expect(f.name, 'Flutter Belgium #26');

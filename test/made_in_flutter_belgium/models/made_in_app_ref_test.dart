@@ -6,7 +6,8 @@ void main() {
     test('parses name and converts appIconUrl to local path', () {
       final ref = MadeInAppRef.fromJson({
         'name': 'Gaia',
-        'appIconUrl': 'https://api.madein.flutterbelgium.be/projects/Gaia/images/app_icon.webp',
+        'appIconUrl':
+            'https://api.madein.flutterbelgium.be/projects/Gaia/images/app_icon.webp',
       });
       expect(ref.name, 'Gaia');
       expect(ref.localIconPath, 'assets/made_in/projects/Gaia/app_icon.webp');

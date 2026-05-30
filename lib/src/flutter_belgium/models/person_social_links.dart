@@ -20,9 +20,9 @@ class PersonSocialLinks {
       );
 
   Map<String, dynamic> toJson() => {
-        'githubUrl': githubUrl,
-        'linkedinUrl': linkedinUrl,
-        'twitterUrl': twitterUrl,
-        'websiteUrl': websiteUrl,
-      };
+    'githubUrl': githubUrl,
+    'linkedinUrl': linkedinUrl,
+    'twitterUrl': twitterUrl,
+    'websiteUrl': websiteUrl,
+  };
 }

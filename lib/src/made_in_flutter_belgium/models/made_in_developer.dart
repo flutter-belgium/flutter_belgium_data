@@ -36,7 +36,9 @@ class MadeInDeveloper {
       name: json['name'] as String?,
       localAvatarPath: toLocalImagePath(rawAvatar),
       description: json['description'] as String?,
-      links: linksJson != null ? MadeInDeveloperLinks.fromJson(linksJson) : null,
+      links: linksJson != null
+          ? MadeInDeveloperLinks.fromJson(linksJson)
+          : null,
       projects: ((json['projects'] as List<dynamic>?) ?? [])
           .map((e) => MadeInAppRef.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -56,11 +58,11 @@ class MadeInDeveloper {
 
   @override
   int get hashCode => Object.hash(
-        githubUserName,
-        localAvatarPath,
-        name,
-        description,
-        links,
-        Object.hashAll(projects),
-      );
+    githubUserName,
+    localAvatarPath,
+    name,
+    description,
+    links,
+    Object.hashAll(projects),
+  );
 }

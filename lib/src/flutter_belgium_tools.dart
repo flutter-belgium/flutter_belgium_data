@@ -11,17 +11,15 @@ class FlutterBelgiumTools {
   Future<void> downloadMadeInAssets({
     String outputPath = 'web/assets/made_in',
     http.Client? client,
-  }) =>
-      downloader.downloadMadeInAssets(outputPath: outputPath, client: client);
+  }) => downloader.downloadMadeInAssets(outputPath: outputPath, client: client);
 
   Future<void> downloadFlutterBelgiumAssets({
     required AirTableConfig config,
     String outputPath = 'web',
     http.Client? client,
-  }) =>
-      fb_downloader.FlutterBelgiumDownloader.downloadFlutterBelgiumAssets(
-        config,
-        outputPath,
-        client: client,
-      );
+  }) => fb_downloader.FlutterBelgiumDownloader.downloadFlutterBelgiumAssets(
+    config,
+    outputPath,
+    client: client,
+  );
 }

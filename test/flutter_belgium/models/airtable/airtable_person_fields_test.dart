@@ -6,7 +6,13 @@ void main() {
     test('parses full record', () {
       final f = AirtablePersonFields.fromJson({
         'Name': 'Koen Van Looveren',
-        'Photo': [{'id': 'attP1', 'url': 'https://example.com/koen.jpg', 'filename': 'koen.jpg'}],
+        'Photo': [
+          {
+            'id': 'attP1',
+            'url': 'https://example.com/koen.jpg',
+            'filename': 'koen.jpg',
+          },
+        ],
         'Companies': ['recCOMPANY1'],
       });
       expect(f.name, 'Koen Van Looveren');

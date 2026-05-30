@@ -48,35 +48,47 @@ void main() {
       expect(a, isNot(equals(b)));
     });
 
-    test('two instances with same appstore but different playstore are not equal', () {
-      const a = MadeInAppLinks(appstore: 'https://a.com', playstore: 'https://play.a.com');
-      const b = MadeInAppLinks(appstore: 'https://a.com', playstore: 'https://play.b.com');
-      expect(a, isNot(equals(b)));
-    });
+    test(
+      'two instances with same appstore but different playstore are not equal',
+      () {
+        const a = MadeInAppLinks(
+          appstore: 'https://a.com',
+          playstore: 'https://play.a.com',
+        );
+        const b = MadeInAppLinks(
+          appstore: 'https://a.com',
+          playstore: 'https://play.b.com',
+        );
+        expect(a, isNot(equals(b)));
+      },
+    );
 
-    test('two fully populated instances with same fields are equal and have same hashCode', () {
-      // Use fromJson to avoid identical() short-circuit on const canonicalization.
-      final a = MadeInAppLinks.fromJson({
-        'appstore': 'https://apps.apple.com/app',
-        'playstore': 'https://play.google.com/store/app',
-        'webApp': 'https://app.example.com',
-        'marketingWebsite': 'https://example.com',
-        'youTube': 'https://youtube.com/channel',
-        'demoYouTubeVideo': 'https://youtube.com/watch?v=abc',
-        'openSourceCode': 'https://github.com/example/repo',
-      });
-      final b = MadeInAppLinks.fromJson({
-        'appstore': 'https://apps.apple.com/app',
-        'playstore': 'https://play.google.com/store/app',
-        'webApp': 'https://app.example.com',
-        'marketingWebsite': 'https://example.com',
-        'youTube': 'https://youtube.com/channel',
-        'demoYouTubeVideo': 'https://youtube.com/watch?v=abc',
-        'openSourceCode': 'https://github.com/example/repo',
-      });
-      expect(a, equals(b));
-      expect(a.hashCode, b.hashCode);
-    });
+    test(
+      'two fully populated instances with same fields are equal and have same hashCode',
+      () {
+        // Use fromJson to avoid identical() short-circuit on const canonicalization.
+        final a = MadeInAppLinks.fromJson({
+          'appstore': 'https://apps.apple.com/app',
+          'playstore': 'https://play.google.com/store/app',
+          'webApp': 'https://app.example.com',
+          'marketingWebsite': 'https://example.com',
+          'youTube': 'https://youtube.com/channel',
+          'demoYouTubeVideo': 'https://youtube.com/watch?v=abc',
+          'openSourceCode': 'https://github.com/example/repo',
+        });
+        final b = MadeInAppLinks.fromJson({
+          'appstore': 'https://apps.apple.com/app',
+          'playstore': 'https://play.google.com/store/app',
+          'webApp': 'https://app.example.com',
+          'marketingWebsite': 'https://example.com',
+          'youTube': 'https://youtube.com/channel',
+          'demoYouTubeVideo': 'https://youtube.com/watch?v=abc',
+          'openSourceCode': 'https://github.com/example/repo',
+        });
+        expect(a, equals(b));
+        expect(a.hashCode, b.hashCode);
+      },
+    );
 
     test('not equal to non-MadeInAppLinks object', () {
       const a = MadeInAppLinks(appstore: 'https://a.com');

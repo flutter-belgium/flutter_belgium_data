@@ -8,7 +8,13 @@ void main() {
         'Name': 'ACA Group',
         'Address': 'Dublinstraat 31, Ghent',
         'Website URL': 'https://acagroup.be',
-        'Logo': [{'id': 'attL1', 'url': 'https://example.com/logo.png', 'filename': 'logo.png'}],
+        'Logo': [
+          {
+            'id': 'attL1',
+            'url': 'https://example.com/logo.png',
+            'filename': 'logo.png',
+          },
+        ],
       });
       expect(f.name, 'ACA Group');
       expect(f.address, 'Dublinstraat 31, Ghent');

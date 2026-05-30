@@ -40,7 +40,7 @@ void main() {
       final restored = PersonCompany.fromJson({
         'name': 'Acme',
         'jobTitle': null,
-        'isActive': null
+        'isActive': null,
       });
       expect(restored.name, 'Acme');
       expect(restored.jobTitle, isNull);

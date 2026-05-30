@@ -10,14 +10,14 @@ class Company {
   final String websiteUrl;
 
   factory Company.fromJson(Map<String, dynamic> json) => Company(
-        name: json['name'] as String,
-        logoUrl: json['logoUrl'] as String,
-        websiteUrl: json['websiteUrl'] as String,
-      );
+    name: json['name'] as String,
+    logoUrl: json['logoUrl'] as String,
+    websiteUrl: json['websiteUrl'] as String,
+  );
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'logoUrl': logoUrl,
-        'websiteUrl': websiteUrl,
-      };
+    'name': name,
+    'logoUrl': logoUrl,
+    'websiteUrl': websiteUrl,
+  };
 }

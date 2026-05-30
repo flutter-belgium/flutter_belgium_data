@@ -6,49 +6,63 @@ void main() {
   group('toLocalImagePath', () {
     test('converts API project image URL to local asset path', () {
       expect(
-        toLocalImagePath('https://api.madein.flutterbelgium.be/projects/Bevoy/images/app_icon.webp'),
+        toLocalImagePath(
+          'https://api.madein.flutterbelgium.be/projects/Bevoy/images/app_icon.webp',
+        ),
         'assets/made_in/projects/Bevoy/app_icon.webp',
       );
     });
 
     test('converts API project URL with spaces in name', () {
       expect(
-        toLocalImagePath('https://api.madein.flutterbelgium.be/projects/Covid Safe/images/app_icon.webp'),
+        toLocalImagePath(
+          'https://api.madein.flutterbelgium.be/projects/Covid Safe/images/app_icon.webp',
+        ),
         'assets/made_in/projects/Covid Safe/app_icon.webp',
       );
     });
 
     test('converts API company logo URL — preserves svg extension', () {
       expect(
-        toLocalImagePath('https://api.madein.flutterbelgium.be/companies/ACA Group/images/logo.svg'),
+        toLocalImagePath(
+          'https://api.madein.flutterbelgium.be/companies/ACA Group/images/logo.svg',
+        ),
         'assets/made_in/companies/ACA Group/logo.svg',
       );
     });
 
     test('converts API company logo URL — preserves webp extension', () {
       expect(
-        toLocalImagePath('https://api.madein.flutterbelgium.be/companies/Aaltra/images/logo.webp'),
+        toLocalImagePath(
+          'https://api.madein.flutterbelgium.be/companies/Aaltra/images/logo.webp',
+        ),
         'assets/made_in/companies/Aaltra/logo.webp',
       );
     });
 
     test('converts API screenshot URL', () {
       expect(
-        toLocalImagePath('https://api.madein.flutterbelgium.be/projects/Covid Safe/images/screenshot_1.webp'),
+        toLocalImagePath(
+          'https://api.madein.flutterbelgium.be/projects/Covid Safe/images/screenshot_1.webp',
+        ),
         'assets/made_in/projects/Covid Safe/screenshot_1.webp',
       );
     });
 
     test('converts GitHub avatar URL to local developer avatar path', () {
       expect(
-        toLocalImagePath('https://avatars.githubusercontent.com/vanlooverenkoen'),
+        toLocalImagePath(
+          'https://avatars.githubusercontent.com/vanlooverenkoen',
+        ),
         'assets/made_in/developers/vanlooverenkoen/avatar.jpg',
       );
     });
 
     test('strips query params from GitHub avatar URL', () {
       expect(
-        toLocalImagePath('https://avatars.githubusercontent.com/vanlooverenkoen?v=4'),
+        toLocalImagePath(
+          'https://avatars.githubusercontent.com/vanlooverenkoen?v=4',
+        ),
         'assets/made_in/developers/vanlooverenkoen/avatar.jpg',
       );
     });

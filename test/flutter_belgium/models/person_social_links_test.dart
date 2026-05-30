@@ -46,7 +46,7 @@ void main() {
         'githubUrl': null,
         'linkedinUrl': null,
         'twitterUrl': null,
-        'websiteUrl': null
+        'websiteUrl': null,
       });
       expect(restored.githubUrl, isNull);
       expect(restored.linkedinUrl, isNull);

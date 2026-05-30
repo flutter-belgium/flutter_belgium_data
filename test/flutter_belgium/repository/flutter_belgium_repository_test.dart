@@ -24,13 +24,13 @@ class _StubRepository implements FlutterBelgiumRepository {
   Future<List<Person>> getPersons() async => [];
   @override
   Future<CommunityLinks> getCommunityLinks() async => const CommunityLinks(
-        slackInviteUrl: '',
-        youtubeChannelUrl: '',
-        meetupUrl: '',
-        linkedinUrl: '',
-        githubUrl: '',
-        madeInUrl: '',
-      );
+    slackInviteUrl: '',
+    youtubeChannelUrl: '',
+    meetupUrl: '',
+    linkedinUrl: '',
+    githubUrl: '',
+    madeInUrl: '',
+  );
   @override
   Future<List<Company>> getHostingCompanies() async => [];
   @override

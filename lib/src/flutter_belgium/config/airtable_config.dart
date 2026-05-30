@@ -19,11 +19,13 @@ class AirTableConfig {
       'AIRTABLE_TABLE_TALKS',
       'AIRTABLE_TABLE_LOCATIONS',
     };
-    final missing =
-        required.where((k) => Platform.environment[k] == null).toList();
+    final missing = required
+        .where((k) => Platform.environment[k] == null)
+        .toList();
     if (missing.isNotEmpty) {
       throw StateError(
-          'Missing required environment variables: ${missing.join(', ')}');
+        'Missing required environment variables: ${missing.join(', ')}',
+      );
     }
     return AirTableConfig(
       personalAccessToken: Platform.environment['AIRTABLE_TOKEN']!,

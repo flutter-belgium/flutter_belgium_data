@@ -14,10 +14,7 @@ void main() {
         companies: [PersonCompany(name: 'impaktfull')],
         socialLinks: PersonSocialLinks(),
       );
-      const t = Testimonial(
-        text: 'Flutter Belgium is great.',
-        author: author,
-      );
+      const t = Testimonial(text: 'Flutter Belgium is great.', author: author);
       expect(t.text, 'Flutter Belgium is great.');
       expect(t.author.name, 'Koen Van Looveren');
     });

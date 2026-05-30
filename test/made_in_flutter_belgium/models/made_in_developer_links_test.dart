@@ -36,27 +36,39 @@ void main() {
       expect(a, isNot(equals(b)));
     });
 
-    test('two instances with same linkedin but different personalWebsite are not equal', () {
-      const a = MadeInDeveloperLinks(linkedin: 'https://linkedin.com/a', personalWebsite: 'https://site-a.com');
-      const b = MadeInDeveloperLinks(linkedin: 'https://linkedin.com/a', personalWebsite: 'https://site-b.com');
-      expect(a, isNot(equals(b)));
-    });
+    test(
+      'two instances with same linkedin but different personalWebsite are not equal',
+      () {
+        const a = MadeInDeveloperLinks(
+          linkedin: 'https://linkedin.com/a',
+          personalWebsite: 'https://site-a.com',
+        );
+        const b = MadeInDeveloperLinks(
+          linkedin: 'https://linkedin.com/a',
+          personalWebsite: 'https://site-b.com',
+        );
+        expect(a, isNot(equals(b)));
+      },
+    );
 
-    test('two fully populated instances with same fields are equal and have same hashCode', () {
-      // Use fromJson to avoid identical() short-circuit on const canonicalization.
-      final a = MadeInDeveloperLinks.fromJson({
-        'linkedin': 'https://linkedin.com/a',
-        'personalWebsite': 'https://site-a.com',
-        'freelanceWebsite': 'https://freelance-a.com',
-      });
-      final b = MadeInDeveloperLinks.fromJson({
-        'linkedin': 'https://linkedin.com/a',
-        'personalWebsite': 'https://site-a.com',
-        'freelanceWebsite': 'https://freelance-a.com',
-      });
-      expect(a, equals(b));
-      expect(a.hashCode, b.hashCode);
-    });
+    test(
+      'two fully populated instances with same fields are equal and have same hashCode',
+      () {
+        // Use fromJson to avoid identical() short-circuit on const canonicalization.
+        final a = MadeInDeveloperLinks.fromJson({
+          'linkedin': 'https://linkedin.com/a',
+          'personalWebsite': 'https://site-a.com',
+          'freelanceWebsite': 'https://freelance-a.com',
+        });
+        final b = MadeInDeveloperLinks.fromJson({
+          'linkedin': 'https://linkedin.com/a',
+          'personalWebsite': 'https://site-a.com',
+          'freelanceWebsite': 'https://freelance-a.com',
+        });
+        expect(a, equals(b));
+        expect(a.hashCode, b.hashCode);
+      },
+    );
 
     test('not equal to non-MadeInDeveloperLinks object', () {
       const a = MadeInDeveloperLinks(linkedin: 'https://linkedin.com/a');

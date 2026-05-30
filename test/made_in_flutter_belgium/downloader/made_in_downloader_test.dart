@@ -10,36 +10,62 @@ MockClient _buildClient({bool failImageDownloads = false}) {
     final path = request.url.path;
 
     if (path == '/projects/minimized_all.json') {
-      return http.Response(json.encode([{'name': 'TestApp'}]), 200);
+      return http.Response(
+        json.encode([
+          {'name': 'TestApp'},
+        ]),
+        200,
+      );
     }
     if (path == '/projects/TestApp/info.json') {
-      return http.Response(json.encode({
-        'images': {
-          'appIconUrl': 'https://api.madein.flutterbelgium.be/projects/TestApp/images/app_icon.webp',
-          'bannerUrl': 'https://api.madein.flutterbelgium.be/projects/TestApp/images/banner.webp',
-          'screenshotUrls': [
-            'https://api.madein.flutterbelgium.be/projects/TestApp/images/screenshot_1.webp',
-          ],
-        },
-      }), 200);
+      return http.Response(
+        json.encode({
+          'images': {
+            'appIconUrl':
+                'https://api.madein.flutterbelgium.be/projects/TestApp/images/app_icon.webp',
+            'bannerUrl':
+                'https://api.madein.flutterbelgium.be/projects/TestApp/images/banner.webp',
+            'screenshotUrls': [
+              'https://api.madein.flutterbelgium.be/projects/TestApp/images/screenshot_1.webp',
+            ],
+          },
+        }),
+        200,
+      );
     }
 
     if (path == '/companies/minimized_all.json') {
-      return http.Response(json.encode([{'name': 'TestCo'}]), 200);
+      return http.Response(
+        json.encode([
+          {'name': 'TestCo'},
+        ]),
+        200,
+      );
     }
     if (path == '/companies/TestCo/info.json') {
-      return http.Response(json.encode({
-        'images': {
-          'logoUrl': 'https://api.madein.flutterbelgium.be/companies/TestCo/images/logo.svg',
-        },
-      }), 200);
+      return http.Response(
+        json.encode({
+          'images': {
+            'logoUrl':
+                'https://api.madein.flutterbelgium.be/companies/TestCo/images/logo.svg',
+          },
+        }),
+        200,
+      );
     }
 
     if (path == '/developers/minimized_all.json') {
-      return http.Response(json.encode([
-        {'githubUserName': 'testdev', 'profilePictureUrl': 'https://avatars.githubusercontent.com/testdev'},
-        {'githubUserName': 'noavatar', 'profilePictureUrl': ''},
-      ]), 200);
+      return http.Response(
+        json.encode([
+          {
+            'githubUserName': 'testdev',
+            'profilePictureUrl':
+                'https://avatars.githubusercontent.com/testdev',
+          },
+          {'githubUserName': 'noavatar', 'profilePictureUrl': ''},
+        ]),
+        200,
+      );
     }
 
     // Image/binary downloads
@@ -53,7 +79,9 @@ void main() {
     late Directory tempDir;
 
     setUp(() async {
-      tempDir = await Directory.systemTemp.createTemp('made_in_downloader_test_');
+      tempDir = await Directory.systemTemp.createTemp(
+        'made_in_downloader_test_',
+      );
     });
 
     tearDown(() async {
@@ -61,32 +89,64 @@ void main() {
     });
 
     test('downloads project icon, banner and screenshots', () async {
-      await downloadMadeInAssets(outputPath: tempDir.path, client: _buildClient());
-      expect(File('${tempDir.path}/projects/TestApp/app_icon.webp').existsSync(), isTrue);
-      expect(File('${tempDir.path}/projects/TestApp/banner.webp').existsSync(), isTrue);
-      expect(File('${tempDir.path}/projects/TestApp/screenshot_1.webp').existsSync(), isTrue);
+      await downloadMadeInAssets(
+        outputPath: tempDir.path,
+        client: _buildClient(),
+      );
+      expect(
+        File('${tempDir.path}/projects/TestApp/app_icon.webp').existsSync(),
+        isTrue,
+      );
+      expect(
+        File('${tempDir.path}/projects/TestApp/banner.webp').existsSync(),
+        isTrue,
+      );
+      expect(
+        File('${tempDir.path}/projects/TestApp/screenshot_1.webp').existsSync(),
+        isTrue,
+      );
     });
 
     test('downloads company logo', () async {
-      await downloadMadeInAssets(outputPath: tempDir.path, client: _buildClient());
-      expect(File('${tempDir.path}/companies/TestCo/logo.svg').existsSync(), isTrue);
+      await downloadMadeInAssets(
+        outputPath: tempDir.path,
+        client: _buildClient(),
+      );
+      expect(
+        File('${tempDir.path}/companies/TestCo/logo.svg').existsSync(),
+        isTrue,
+      );
     });
 
     test('downloads developer avatar and skips empty avatarUrl', () async {
-      await downloadMadeInAssets(outputPath: tempDir.path, client: _buildClient());
-      expect(File('${tempDir.path}/developers/testdev/avatar.jpg').existsSync(), isTrue);
-      expect(File('${tempDir.path}/developers/noavatar/avatar.jpg').existsSync(), isFalse);
+      await downloadMadeInAssets(
+        outputPath: tempDir.path,
+        client: _buildClient(),
+      );
+      expect(
+        File('${tempDir.path}/developers/testdev/avatar.jpg').existsSync(),
+        isTrue,
+      );
+      expect(
+        File('${tempDir.path}/developers/noavatar/avatar.jpg').existsSync(),
+        isFalse,
+      );
     });
 
     test('continues when individual image download fails', () async {
       await expectLater(
-        downloadMadeInAssets(outputPath: tempDir.path, client: _buildClient(failImageDownloads: true)),
+        downloadMadeInAssets(
+          outputPath: tempDir.path,
+          client: _buildClient(failImageDownloads: true),
+        ),
         completes,
       );
     });
 
     test('uses default outputPath when none provided', () async {
-      final emptyClient = MockClient((request) async => http.Response('[]', 200));
+      final emptyClient = MockClient(
+        (request) async => http.Response('[]', 200),
+      );
       await expectLater(downloadMadeInAssets(client: emptyClient), completes);
     });
 
@@ -107,12 +167,19 @@ void main() {
       final noAssetClient = MockClient((request) async {
         final path = request.url.path;
         if (path == '/projects/minimized_all.json') {
-          return http.Response(json.encode([{'name': 'Bare'}]), 200);
+          return http.Response(
+            json.encode([
+              {'name': 'Bare'},
+            ]),
+            200,
+          );
         }
         if (path == '/projects/Bare/info.json') {
           return http.Response(json.encode({'images': {}}), 200);
         }
-        if (path.endsWith('minimized_all.json')) return http.Response('[]', 200);
+        if (path.endsWith('minimized_all.json')) {
+          return http.Response('[]', 200);
+        }
         return http.Response.bytes([], 200);
       });
       await expectLater(
@@ -125,12 +192,19 @@ void main() {
       final noLogoClient = MockClient((request) async {
         final path = request.url.path;
         if (path == '/companies/minimized_all.json') {
-          return http.Response(json.encode([{'name': 'NoLogo'}]), 200);
+          return http.Response(
+            json.encode([
+              {'name': 'NoLogo'},
+            ]),
+            200,
+          );
         }
         if (path == '/companies/NoLogo/info.json') {
           return http.Response(json.encode({'images': {}}), 200);
         }
-        if (path.endsWith('minimized_all.json')) return http.Response('[]', 200);
+        if (path.endsWith('minimized_all.json')) {
+          return http.Response('[]', 200);
+        }
         return http.Response.bytes([], 200);
       });
       await expectLater(

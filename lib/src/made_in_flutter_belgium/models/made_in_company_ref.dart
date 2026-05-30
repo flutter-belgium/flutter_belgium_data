@@ -28,5 +28,6 @@ class MadeInCompanyRef {
           useLogoInsteadOfTextTitle == other.useLogoInsteadOfTextTitle;
 
   @override
-  int get hashCode => Object.hash(name, localLogoPath, useLogoInsteadOfTextTitle);
+  int get hashCode =>
+      Object.hash(name, localLogoPath, useLogoInsteadOfTextTitle);
 }

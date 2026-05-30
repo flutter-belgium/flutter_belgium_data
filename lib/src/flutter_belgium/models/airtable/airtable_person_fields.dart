@@ -13,8 +13,7 @@ class AirtablePersonFields {
         photo: ((json['Photo'] as List?)?.cast<Map<String, dynamic>>() ?? [])
             .map(AirtableAttachment.fromJson)
             .toList(),
-        companyIds:
-            (json['Companies'] as List?)?.cast<String>() ?? const [],
+        companyIds: (json['Companies'] as List?)?.cast<String>() ?? const [],
       );
 
   final String? name;

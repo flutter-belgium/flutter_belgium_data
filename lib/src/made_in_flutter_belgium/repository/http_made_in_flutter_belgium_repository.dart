@@ -11,14 +11,17 @@ class HttpMadeInFlutterBelgiumRepository
   static const _base = 'https://api.madein.flutterbelgium.be';
 
   HttpMadeInFlutterBelgiumRepository({http.Client? client})
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   final http.Client _client;
 
   Future<dynamic> _get(String url) async {
     final response = await _client.get(Uri.parse(url));
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw HttpException('HTTP ${response.statusCode} for $url', uri: Uri.parse(url));
+      throw HttpException(
+        'HTTP ${response.statusCode} for $url',
+        uri: Uri.parse(url),
+      );
     }
     return json.decode(response.body);
   }
@@ -37,8 +40,9 @@ class HttpMadeInFlutterBelgiumRepository
 
   Future<MadeInApp> _fetchApp(String name) async {
     final encoded = Uri.encodeComponent(name);
-    final data = await _get('$_base/projects/$encoded/info.json')
-        as Map<String, dynamic>;
+    final data =
+        await _get('$_base/projects/$encoded/info.json')
+            as Map<String, dynamic>;
     return MadeInApp.fromJson(data);
   }
 
@@ -54,8 +58,9 @@ class HttpMadeInFlutterBelgiumRepository
 
   Future<MadeInCompany> _fetchCompany(String name) async {
     final encoded = Uri.encodeComponent(name);
-    final data = await _get('$_base/companies/$encoded/info.json')
-        as Map<String, dynamic>;
+    final data =
+        await _get('$_base/companies/$encoded/info.json')
+            as Map<String, dynamic>;
     return MadeInCompany.fromJson(data);
   }
 
@@ -71,8 +76,9 @@ class HttpMadeInFlutterBelgiumRepository
 
   Future<MadeInDeveloper> _fetchDeveloper(String username) async {
     final encoded = Uri.encodeComponent(username);
-    final data = await _get('$_base/developers/$encoded/info.json')
-        as Map<String, dynamic>;
+    final data =
+        await _get('$_base/developers/$encoded/info.json')
+            as Map<String, dynamic>;
     return MadeInDeveloper.fromJson(data);
   }
 }

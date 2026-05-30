@@ -6,7 +6,8 @@ void main() {
     test('parses all fields and converts logoUrl to local path', () {
       final ref = MadeInCompanyRef.fromJson({
         'name': 'Lemon',
-        'logoUrl': 'https://api.madein.flutterbelgium.be/companies/Lemon/images/logo.webp',
+        'logoUrl':
+            'https://api.madein.flutterbelgium.be/companies/Lemon/images/logo.webp',
         'useLogoInsteadOfTextTitle': true,
       });
       expect(ref.name, 'Lemon');
@@ -17,7 +18,8 @@ void main() {
     test('useLogoInsteadOfTextTitle defaults to false when absent', () {
       final ref = MadeInCompanyRef.fromJson({
         'name': 'NoLogo',
-        'logoUrl': 'https://api.madein.flutterbelgium.be/companies/NoLogo/images/logo.svg',
+        'logoUrl':
+            'https://api.madein.flutterbelgium.be/companies/NoLogo/images/logo.svg',
       });
       expect(ref.useLogoInsteadOfTextTitle, false);
     });
@@ -30,15 +32,31 @@ void main() {
 
   group('MadeInCompanyRef equality', () {
     test('two instances with same fields are equal', () {
-      const a = MadeInCompanyRef(name: 'A', localLogoPath: 'p', useLogoInsteadOfTextTitle: true);
-      const b = MadeInCompanyRef(name: 'A', localLogoPath: 'p', useLogoInsteadOfTextTitle: true);
+      const a = MadeInCompanyRef(
+        name: 'A',
+        localLogoPath: 'p',
+        useLogoInsteadOfTextTitle: true,
+      );
+      const b = MadeInCompanyRef(
+        name: 'A',
+        localLogoPath: 'p',
+        useLogoInsteadOfTextTitle: true,
+      );
       expect(a, equals(b));
       expect(a.hashCode, b.hashCode);
     });
 
     test('two instances with different fields are not equal', () {
-      const a = MadeInCompanyRef(name: 'A', localLogoPath: 'p', useLogoInsteadOfTextTitle: true);
-      const b = MadeInCompanyRef(name: 'A', localLogoPath: 'p', useLogoInsteadOfTextTitle: false);
+      const a = MadeInCompanyRef(
+        name: 'A',
+        localLogoPath: 'p',
+        useLogoInsteadOfTextTitle: true,
+      );
+      const b = MadeInCompanyRef(
+        name: 'A',
+        localLogoPath: 'p',
+        useLogoInsteadOfTextTitle: false,
+      );
       expect(a, isNot(equals(b)));
     });
   });

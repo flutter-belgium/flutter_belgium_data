@@ -26,7 +26,10 @@ class FlutterBelgiumDownloader {
   }
 
   static Future<void> _downloadFile(
-      http.Client client, String url, String localPath) async {
+    http.Client client,
+    String url,
+    String localPath,
+  ) async {
     try {
       await Directory(localPath).parent.create(recursive: true);
       final response = await client.get(Uri.parse(url));
@@ -42,10 +45,16 @@ class FlutterBelgiumDownloader {
   }
 
   static Future<void> _downloadCompanyLogos(
-      AirTableConfig config, String outputDir, http.Client client) async {
+    AirTableConfig config,
+    String outputDir,
+    http.Client client,
+  ) async {
     print('Downloading company logos...');
-    final records =
-        await fetchAllAirtableRecords(config, config.tableLocations, client);
+    final records = await fetchAllAirtableRecords(
+      config,
+      config.tableLocations,
+      client,
+    );
     for (final record in records) {
       final f = AirtableLocationFields.fromJson(record.fields);
       if (f.logo.isEmpty) continue;
@@ -58,10 +67,16 @@ class FlutterBelgiumDownloader {
   }
 
   static Future<void> _downloadPersonAvatars(
-      AirTableConfig config, String outputDir, http.Client client) async {
+    AirTableConfig config,
+    String outputDir,
+    http.Client client,
+  ) async {
     print('Downloading person avatars...');
-    final records =
-        await fetchAllAirtableRecords(config, config.tablePeople, client);
+    final records = await fetchAllAirtableRecords(
+      config,
+      config.tablePeople,
+      client,
+    );
     for (final record in records) {
       final f = AirtablePersonFields.fromJson(record.fields);
       if (f.photo.isEmpty) continue;
@@ -74,10 +89,16 @@ class FlutterBelgiumDownloader {
   }
 
   static Future<void> _downloadMeetupPosters(
-      AirTableConfig config, String outputDir, http.Client client) async {
+    AirTableConfig config,
+    String outputDir,
+    http.Client client,
+  ) async {
     print('Downloading meetup posters...');
-    final records =
-        await fetchAllAirtableRecords(config, config.tableMeetups, client);
+    final records = await fetchAllAirtableRecords(
+      config,
+      config.tableMeetups,
+      client,
+    );
     for (final record in records) {
       final f = AirtableMeetupFields.fromJson(record.fields);
       if (f.poster.isEmpty) continue;

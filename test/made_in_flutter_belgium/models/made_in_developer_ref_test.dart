@@ -9,7 +9,10 @@ void main() {
         'profilePictureUrl': 'https://avatars.githubusercontent.com/tijlivens',
       });
       expect(ref.githubUserName, 'tijlivens');
-      expect(ref.localAvatarPath, 'assets/made_in/developers/tijlivens/avatar.jpg');
+      expect(
+        ref.localAvatarPath,
+        'assets/made_in/developers/tijlivens/avatar.jpg',
+      );
     });
 
     test('falls back to empty string when profilePictureUrl is absent', () {
@@ -20,15 +23,27 @@ void main() {
 
   group('MadeInDeveloperRef equality', () {
     test('two instances with same fields are equal', () {
-      const a = MadeInDeveloperRef(githubUserName: 'dev', localAvatarPath: 'path/a');
-      const b = MadeInDeveloperRef(githubUserName: 'dev', localAvatarPath: 'path/a');
+      const a = MadeInDeveloperRef(
+        githubUserName: 'dev',
+        localAvatarPath: 'path/a',
+      );
+      const b = MadeInDeveloperRef(
+        githubUserName: 'dev',
+        localAvatarPath: 'path/a',
+      );
       expect(a, equals(b));
       expect(a.hashCode, b.hashCode);
     });
 
     test('two instances with different fields are not equal', () {
-      const a = MadeInDeveloperRef(githubUserName: 'dev', localAvatarPath: 'path/a');
-      const b = MadeInDeveloperRef(githubUserName: 'dev', localAvatarPath: 'path/b');
+      const a = MadeInDeveloperRef(
+        githubUserName: 'dev',
+        localAvatarPath: 'path/a',
+      );
+      const b = MadeInDeveloperRef(
+        githubUserName: 'dev',
+        localAvatarPath: 'path/b',
+      );
       expect(a, isNot(equals(b)));
     });
   });

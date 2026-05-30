@@ -19,25 +19,26 @@ class Person {
   final PersonSocialLinks socialLinks;
 
   factory Person.fromJson(Map<String, dynamic> json) => Person(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        avatarUrl: json['avatarUrl'] as String,
-        companies: ((json['companies'] as List<dynamic>?) ?? [])
-            .map((e) => PersonCompany.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        githubUsername: json['githubUsername'] as String?,
-        socialLinks: PersonSocialLinks.fromJson(
-            (json['socialLinks'] as Map<String, dynamic>?) ?? {}),
-      );
+    id: json['id'] as String,
+    name: json['name'] as String,
+    avatarUrl: json['avatarUrl'] as String,
+    companies: ((json['companies'] as List<dynamic>?) ?? [])
+        .map((e) => PersonCompany.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    githubUsername: json['githubUsername'] as String?,
+    socialLinks: PersonSocialLinks.fromJson(
+      (json['socialLinks'] as Map<String, dynamic>?) ?? {},
+    ),
+  );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'avatarUrl': avatarUrl,
-        'companies': companies.map((c) => c.toJson()).toList(),
-        'githubUsername': githubUsername,
-        'socialLinks': socialLinks.toJson(),
-      };
+    'id': id,
+    'name': name,
+    'avatarUrl': avatarUrl,
+    'companies': companies.map((c) => c.toJson()).toList(),
+    'githubUsername': githubUsername,
+    'socialLinks': socialLinks.toJson(),
+  };
 
   PersonCompany? get activeCompany {
     final matches = companies.where((c) => c.isActive);

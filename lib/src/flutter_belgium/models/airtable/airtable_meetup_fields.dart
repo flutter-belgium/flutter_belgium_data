@@ -15,14 +15,12 @@ class AirtableMeetupFields {
       AirtableMeetupFields(
         name: json['Name'] as String?,
         date: json['Date'] as String?,
-        locationIds:
-            (json['Location'] as List?)?.cast<String>() ?? const [],
+        locationIds: (json['Location'] as List?)?.cast<String>() ?? const [],
         talkIds: (json['Talks'] as List?)?.cast<String>() ?? const [],
         description: json['Description'] as String?,
-        poster:
-            ((json['Poster'] as List?)?.cast<Map<String, dynamic>>() ?? [])
-                .map(AirtableAttachment.fromJson)
-                .toList(),
+        poster: ((json['Poster'] as List?)?.cast<Map<String, dynamic>>() ?? [])
+            .map(AirtableAttachment.fromJson)
+            .toList(),
         meetupUrl: json['Meetup URL'] as String?,
       );
 

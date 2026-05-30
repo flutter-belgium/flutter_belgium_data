@@ -53,7 +53,7 @@ void main() {
         'role': 'Developer',
         'avatarUrl': '/assets/avatar.png',
         'linkedinUrl': null,
-        'githubUrl': null
+        'githubUrl': null,
       });
       expect(restored.name, 'John Doe');
       expect(restored.role, 'Developer');
