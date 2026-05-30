@@ -1,5 +1,4 @@
 // test/flutter_belgium/repository/airtable_flutter_belgium_repository_test.dart
-import 'dart:convert';
 import 'package:flutter_belgium_data/src/flutter_belgium/config/airtable_config.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/repository/airtable_flutter_belgium_repository.dart';
 import 'package:http/http.dart' as http;
@@ -136,11 +135,17 @@ const _config = AirTableConfig(
 MockClient _mockClient() => MockClient((request) async {
       final tableId = request.url.path.split('/').last;
       String body;
-      if (tableId == 'tblCOMPANIES') body = _companyRecords;
-      else if (tableId == 'tblPEOPLE') body = _peopleRecords;
-      else if (tableId == 'tblTALKS') body = _talkRecords;
-      else if (tableId == 'tblMEETUPS') body = _meetupRecords;
-      else body = '{"records":[]}';
+      if (tableId == 'tblCOMPANIES') {
+        body = _companyRecords;
+      } else if (tableId == 'tblPEOPLE') {
+        body = _peopleRecords;
+      } else if (tableId == 'tblTALKS') {
+        body = _talkRecords;
+      } else if (tableId == 'tblMEETUPS') {
+        body = _meetupRecords;
+      } else {
+        body = '{"records":[]}';
+      }
       return http.Response(body, 200, headers: {'content-type': 'application/json'});
     });
 
@@ -279,11 +284,17 @@ void main() {
         callCount++;
         final tableId = request.url.path.split('/').last;
         String body;
-        if (tableId == 'tblCOMPANIES') body = _companyRecords;
-        else if (tableId == 'tblPEOPLE') body = _peopleRecords;
-        else if (tableId == 'tblTALKS') body = _talkRecords;
-        else if (tableId == 'tblMEETUPS') body = _meetupRecords;
-        else body = '{"records":[]}';
+        if (tableId == 'tblCOMPANIES') {
+          body = _companyRecords;
+        } else if (tableId == 'tblPEOPLE') {
+          body = _peopleRecords;
+        } else if (tableId == 'tblTALKS') {
+          body = _talkRecords;
+        } else if (tableId == 'tblMEETUPS') {
+          body = _meetupRecords;
+        } else {
+          body = '{"records":[]}';
+        }
         return http.Response(body, 200, headers: {'content-type': 'application/json'});
       });
       final repo = AirtableFlutterBelgiumRepository(config: _config, client: client);
