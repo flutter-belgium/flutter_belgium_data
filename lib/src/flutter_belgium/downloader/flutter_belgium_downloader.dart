@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_belgium_data/src/flutter_belgium/config/airtable_config.dart';
+import 'package:flutter_belgium_data/src/flutter_belgium/config/flutter_belgium_logger.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/airtable/airtable_location_fields.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/airtable/airtable_meetup_fields.dart';
 import 'package:flutter_belgium_data/src/flutter_belgium/models/airtable/airtable_person_fields.dart';
@@ -13,12 +14,13 @@ class FlutterBelgiumDownloader {
     AirTableConfig config,
     String outputDir, {
     http.Client? client,
+    FlutterBelgiumLogger logger = const FlutterBelgiumLogger(),
   }) async {
     final httpClient = client ?? http.Client();
     final shouldClose = client == null;
     try {
-      await _downloadCompanyLogos(config, outputDir, httpClient);
-      await _downloadPersonAvatars(config, outputDir, httpClient);
+      await _downloadCompanyLogos(config, outputDir, httpClient, logger);
+      await _downloadPersonAvatars(config, outputDir, httpClient, logger);
       await _downloadMeetupPosters(config, outputDir, httpClient);
     } finally {
       if (shouldClose) httpClient.close();
@@ -48,6 +50,7 @@ class FlutterBelgiumDownloader {
     AirTableConfig config,
     String outputDir,
     http.Client httpClient,
+    FlutterBelgiumLogger logger,
   ) async {
     print('Downloading company logos...');
     final records = await fetchAllAirtableRecords(
@@ -58,8 +61,8 @@ class FlutterBelgiumDownloader {
     for (final record in records) {
       final fields = AirtableLocationFields.fromJson(record.fields);
       if (fields.logo.isEmpty) {
-        print(
-          '[AirTable] Skipping logo download for company "${fields.name ?? record.id}": missing "Logo" attachment',
+        logger.skippedRecord(
+          'Skipping logo download for company "${fields.name ?? record.id}": missing "Logo" attachment',
         );
         continue;
       }
@@ -75,6 +78,7 @@ class FlutterBelgiumDownloader {
     AirTableConfig config,
     String outputDir,
     http.Client httpClient,
+    FlutterBelgiumLogger logger,
   ) async {
     print('Downloading person avatars...');
     final records = await fetchAllAirtableRecords(
@@ -85,8 +89,8 @@ class FlutterBelgiumDownloader {
     for (final record in records) {
       final fields = AirtablePersonFields.fromJson(record.fields);
       if (fields.photo.isEmpty) {
-        print(
-          '[AirTable] Skipping avatar download for person "${fields.name ?? record.id}": missing "Photo" attachment',
+        logger.skippedRecord(
+          'Skipping avatar download for person "${fields.name ?? record.id}": missing "Photo" attachment',
         );
         continue;
       }
